@@ -25,7 +25,7 @@ These instructions will get you a copy of the project up and running on your loc
    ```sh
    git clone https://github.com/maf68/Capstone-.git
 
-## ppt presentation link(for prof. Fataima)
+## ppt presentation link(for prof. Fatima)
 - [Link](https://mailaub-my.sharepoint.com/:p:/g/personal/hmd26_mail_aub_edu/EcQ-awWRO0VOuXcEaPae0i8B6gA40lAmtMBi1bT3MWWxqg?e=lfPG7d)
 
 
