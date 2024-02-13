@@ -16,9 +16,15 @@ These instructions will get you a copy of the project up and running on your loc
 - Any modern web browser.
 
 ### Acknowledgements
--**Leaflet**
--**WhatsApp bussines API**
--**more to come...**
+
+- **Leaflet**: An open-source JavaScript library for mobile-friendly interactive maps. Widely used and highly versatile, it's a key tool for geographic data visualization in our project.
+
+- **WhatsApp Business API**: Allows businesses to communicate with their customers efficiently. In our project, it's used to facilitate reporting corruption through WhatsApp, making it more accessible for users.
+
+- **GlobalLeaks**: An open-source whistleblowing framework. It helps in creating a secure and anonymous whistleblowing platform, which is crucial for the integrity and safety of users reporting corruption.
+
+- **More to come...**
+
 
 ### Installation
 1. Clone the repo
