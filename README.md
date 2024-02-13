@@ -16,9 +16,9 @@ These instructions will get you a copy of the project up and running on your loc
 - Any modern web browser.
 
 ### Acknowledgements
--Leaflet
--WhatsApp bussines API
--more to come...
+-**Leaflet**
+-**WhatsApp bussines API**
+-**more to come...**
 
 ### Installation
 1. Clone the repo
