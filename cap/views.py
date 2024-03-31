@@ -6,7 +6,7 @@ from .models import Report
 from django.db.models import Count
 
 # Create your views here.
-
+# function that accepts a get request to the server in order to retrieve the sector names associated with the sector type chosen in the form, return the sector names as JSON.
 def load_sector_names(request):
     sector_type = request.GET.get('sector_type')
     names = []
@@ -32,7 +32,7 @@ def load_sector_names(request):
         names = general_security
     return JsonResponse(names, safe=False)
 
-
+# function that creates an instance of the form and renders it in the html file, it saves the report into the database if the form is valid.
 def report_view(request):
     if request.method == 'POST': # validate the form
         form = ReportForm(request.POST)
@@ -42,7 +42,7 @@ def report_view(request):
     else:
         form = ReportForm() # get an empty form 
     return render(request, 'cap/report.html', {'form': form})
-
+# different queries that can be used for visualization. Temporary function that will change according to visualization needs.
 def statistics_view(request):
     corruption_type_count = Report.objects.values('corruption_type').annotate(total=Count('corruption_type'))
 
