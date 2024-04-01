@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cap',
+    'report',
     'django_recaptcha',
 
 ]
@@ -55,9 +55,9 @@ MIDDLEWARE = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Db',  
-        'USER': 'moham', 
-        'PASSWORD': '123',  
+        'NAME': 'db',  
+        'USER': 'ali', 
+        'PASSWORD': 'Ali_faour03',  
         'HOST': 'localhost',
         'PORT': '5432',  
     }
