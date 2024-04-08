@@ -1,11 +1,50 @@
 {% extends "report/base.html" %}
+<html dir="rtl" lang="ar">
+ 
 
 {% block content %}
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/static/report/images/Screenshot 2024-04-06 at 3.54.49 PM.png" width="200" height="500" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="/static/report/images/Screenshot 2024-04-06 at 3.54.49 PM.png" width="200" height="500" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="/static/report/images/Screenshot 2024-04-06 at 3.54.49 PM.png" width="200" height="500" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<div class="fancy" style="text-align: right; margin-right: 49%; margin-top: 5%; margin-bottom: 7%; font-size: 140%;">
+  <span>نوع القطاع</span>
+</div>
+
+<div class="d-flex flex-row flex-wrap justify-content-start" style="margin-left: -23%; margin-top: 3%;">
   {% for sector in sectors %}
-    <div class="card mb-3" style="max-width: 540px;">
-      <div class="row g-0">
+  <div class="card mb-3 mx-2" style="width: calc(28% - 2rem); /* Adjust margin between cards */
+                                      margin-right: 2rem; /* Margin between cards */
+                                      background: rgba(255, 255, 255, 0.7);
+                                      border-radius: 8px;
+                                      box-shadow: 0 0 10px rgb(53, 94, 59);
+                                      position: relative;
+                                      z-index: 1;">
+    <div class="row g-0">
         <div class="col-md-4">
-          <img src="..." class="img-fluid rounded-start" alt="...">
+          <img src="/static/report/images/cedar2.png" class="img-fluid rounded-start" alt="...">
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -16,5 +55,8 @@
       </div>
     </div>
   {% endfor %}
+</div>
+
+
 {% endblock content %}
-    
+</html>
