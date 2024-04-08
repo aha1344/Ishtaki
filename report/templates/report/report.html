@@ -1,59 +1,65 @@
-{% load static %}
+{% extends "report/base.html" %}
+{% comment %} {% load static %} {% endcomment %}
 
-<!DOCTYPE html>
-<html>
-<head> 
-    <link rel="stylesheet" href="{% static 'report/reportStyle.css' %}">
-</head>
-<body>
-<form method="post">
-    {% csrf_token %}
-    <p> نوع الفساد</p>
-    {{ form.corruption_type }}
-
-    <p>نوع القطاع المسؤول </p>
-    {{ form.public_sector_type }}
-
-    <p> اسم المؤسسة</p>
-    {{ form.public_sector_name }}
-
-    <p> تاريخ الحدث </p>
-    {{ form.date_of_incident }}
-
-    <p> المدينة </p>
-    {{ form.city }}
-
-    <p> الشارع </p>
-    {{ form.street }}
-
-    {{form.captcha}}
-
+{% block content %}
+<div class="card">
+  <form method="post">
+    <ul class="list-group list-group-flush">
+      {% csrf_token %}
+      <li class="list-group-item">
+        <p>نوع الفساد</p>
+        {{ form.corruption_type }}
+      </li>
+      <li class="list-group-item">
+        <p>نوع القطاع المسؤول</p>
+        {{ form.public_sector_type }}
+      </li>
+      <li class="list-group-item">
+        <p>اسم المؤسسة</p>
+        {{ form.public_sector_name }}
+      </li>
+      <li class="list-group-item">
+        <p>تاريخ الحدث</p>
+        {{ form.date_of_incident }}
+      </li>
+      <li class="list-group-item">
+        <p>المدينة</p>
+        {{ form.city }}
+      </li>
+      <li class="list-group-item">
+        <p>الشارع</p>
+        {{ form.street }}
+      </li>
+    </ul>
+    <div class="cap">
+      {{ form.captcha }}
+    </div>
     <button type="submit">Submit</button>
-</form>
-</body>
-</html>
+  </form>
+</div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-    /* This is for making the sector name values in the form change when a different sector type is selected  */
-    document.addEventListener('DOMContentLoaded', function() {
-      var sectorTypeSelect = document.getElementById('public_sector_type_id');
-      var sectorNameSelect = document.getElementById('public_sector_name_id');
-    
-      sectorTypeSelect.addEventListener('change', function() {
-        var sectorTypeId = this.value;
-        var url = '/ajax/load_sector_names/?sector_type=' + sectorTypeId;
-    
-        fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            sectorNameSelect.innerHTML = '';
-            data.forEach(function(item) {
-              var option = new Option(item[1], item[0]);
-              sectorNameSelect.add(option);
-            });
-          })
-          .catch(error => console.error('Error loading sector names:', error));
-      });
-    });
-    </script>
-    
+document.addEventListener('DOMContentLoaded', function() {
+  var sectorTypeSelect = document.getElementById('id_public_sector_type');
+  var sectorNameSelect = document.getElementById('id_public_sector_name');
+
+  sectorTypeSelect.addEventListener('change', function() {
+    var sectorTypeId = this.value;
+    var url = '/ajax/load_sector_names/?sector_type=' + sectorTypeId;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        sectorNameSelect.innerHTML = '';
+        data.forEach(function(item) {
+          var option = new Option(item[1], item[0]);
+          sectorNameSelect.add(option);
+        });
+      })
+      .catch(error => console.error('Error loading sector names:', error));
+  });
+});
+</script>
+{% endblock %}
