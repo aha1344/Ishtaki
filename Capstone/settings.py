@@ -52,29 +52,22 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'db',  
-#         'USER': 'ali', 
-#         'PASSWORD': 'Ali_faour03',  
-#         'HOST': 'localhost',
-#         'PORT': '5432',  
-#     }
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'Db',  
-    #     'USER': 'nour', 
-    #     'PASSWORD': 'nourCsfeir1523',  
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',  
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Db',  
+        # change name to database name on your laptop
+        'USER': 'moham',  
+        # change user to ur database user name on your laptop
+        'PASSWORD': '123',  
+        # password of your user
+        'HOST': 'localhost',
+        'PORT': '5432',  
+    }
 }
 
 
