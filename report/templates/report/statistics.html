@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div id="main" style="width: 600px; height: 400px;"></div>
+    <div id="main2" style="width: 1200px; height: 400px;"></div>
+
+    <script>    
+        var myChart = echarts.init(document.getElementById('main'));
+        // basically saying i want a chart named mychart inside the div main
+        var myChart2 = echarts.init(document.getElementById('main2'))
+    
+        var sectorType = '{{ sector_type }}'; 
+        // now we send a request to the server to fetch the report statistics
+        fetch(`/ajax/load_statistics/${sectorType}/`)
+            .then(response => response.json())
+            .then(data => {
+                // each option contains the settings for a chart
+                var option = {
+                    title: {
+                        text: 'Report Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1)
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['Total']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.public_sector_type_count.map(item => item.year)
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        type: 'bar',
+                        data: data.public_sector_type_count.map(item => item.total)
+                    }]
+                };
+
+                var option2 = {
+                    title: {
+                        text: 'Report Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1) + ' per Corruption Type'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['Total']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.public_sector_per_ct_count.map(item => item.corruption_type),
+                        // set corruption type as x-axis
+                        axisLabel: {
+                            interval: 0, 
+                            rotate: 45,   //Rotate labels to fit more categories
+                    }
+                },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        type: 'line',
+                        // type of chart
+                        data: data.public_sector_per_ct_count.map(item => item.total),
+                        // set total, which in the statistics view was set equal to the count within each sector type, as the y - axis
+                        itemStyle: {color: 'green'}
+                    }]
+                };
+                
+                // setOption displays the chart using the options/settings we chose
+                myChart.setOption(option);
+                myChart2.setOption(option2);
+            })
+            .catch(error => console.error('Error loading the data:', error));
+    </script>
+    

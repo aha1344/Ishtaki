@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
-from .choices import hospitals, ministries, institutions, prisons, banks, courts, universities, military, police, general_security, sector_types
+from .choices import hospitals, ministries, institutions, prisons, banks, courts, universities, military, police, general_security, sector_types, corruption_types
 from django.http import JsonResponse
 from .forms import ReportForm
 from .models import Report
 from django.db.models import Count
+from django.db.models.functions import ExtractYear
+
 
 
 
@@ -35,7 +37,8 @@ def load_sector_names(request):
 
 # function that creates an instance of the form and renders it in the html file, it saves the report into the database if the form is valid.
 def report_view(request):
-    if request.method == 'POST': # validate the form
+    if request.method == 'POST':
+         # validate the form
         form = ReportForm(request.POST)
         if form.is_valid():
             form.save()
@@ -43,28 +46,40 @@ def report_view(request):
     else:
         form = ReportForm() # get an empty form 
     return render(request, 'report/report.html', {'form': form})
-# different queries that can be used for visualization. Temporary function that will change according to visualization needs.
-def statistics_view(request):
-    corruption_type_count = Report.objects.values('corruption_type').annotate(total=Count('corruption_type'))
 
-    # Count reports by public sector type
-    public_sector_type_count = Report.objects.values('public_sector_type').annotate(total=Count('public_sector_type'))
+# renders the visualization page for every sector type
+def statistics(request, sector_type):
+    return render(request, 'report/statistics.html', {'sector_type':sector_type})
 
-    # Count reports by city
-    city_count = Report.objects.values('city').annotate(total=Count('city'))
+# function that catches an ajax request to send report statistics as a json response to the statistics html page. 
+# to add an aggregation just add it inside this function and put in context
+def load_statistics(request, sector_type):
 
-    latest_report = Report.objects.latest('date_of_incident')
+    # Aggregate counts by sector type (filtering by a specific sector type)
+    public_sector_type_count = list(Report.objects
+                                    .filter(public_sector_type=sector_type)
+                                    .annotate(year=ExtractYear('date_of_incident'))
+                                    .values('year')
+                                    .annotate(total=Count('id'))
+                                    .order_by('year'))
+    corruption_type_list = [choice[0] for choice in corruption_types]
+
+# Counting reports per corruption type in a specific public sector
+    pb_count_per_corruption_type = list(Report.objects
+                                     .filter(public_sector_type=sector_type)
+                                     .values('corruption_type')  # Group by corruption type
+                                     .annotate(total=Count('id'))  # Count occurrences
+                                     )  
+
 
     context = {
-        'corruption_type_count': corruption_type_count,
         'public_sector_type_count': public_sector_type_count,
-        'city_count': city_count,
-        'latest_report': latest_report,
+        'public_sector_per_ct_count': pb_count_per_corruption_type,
     }
-    
-    return render(request, 'report/visualization.html', context)
 
-# view to display home page.
+    return JsonResponse(context)
+
+# function to display home page.
 def HomePage(request):
     sectors  = [sector[1] for sector in sector_types]
     return render(request, "report/home.html", {"sectors":sectors})
