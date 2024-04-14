@@ -49,7 +49,7 @@ def report_view(request):
 
 # renders the visualization page for every sector type
 def statistics(request, sector_type):
-    return render(request, 'report/statistics.html', {'sector_type':sector_type, 'corruption_types':corruption_types})
+    return render(request, 'report/statistics.html', {'sector_type':sector_type, 'corruption_types':corruption_types, 'sector_types':sector_types})
 
 # function that catches an ajax request to send report statistics as a json response to the statistics html page. 
 # to add an aggregation just add it inside this function and put in context

@@ -6,6 +6,18 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 </head>
 <body>
+    <label for="sectorTypeSelect">Choose a sector:</label>
+<select id="sectorTypeSelect">
+    <option value="">Select Sector</option>
+    {% for value, name in sector_types %}
+    <option value="{{ value }}" {% if value == sector_type %}selected{% endif %}>{{ name }}</option>
+    {% endfor %}
+</select>
+
+<br><br>
+
+
+    
     <label for="corruptionTypeSelect">نوع الفساد:</label>
     <select id="corruptionTypeSelect">
     {% for value, name in corruption_types %}
@@ -18,6 +30,14 @@
     <div id="main2" style="width: 1200px; height: 400px;"></div>
     
     <script>
+        document.getElementById('sectorTypeSelect').addEventListener('change', function() {
+            var sectorType = this.value;
+            if (sectorType) {  // Check if a valid sector type is selected
+                window.location.href = `/statistics/${sectorType}/`;  // Redirect to the URL
+            }
+        });
+
+
         var sectorType = '{{ sector_type }}'; // in url
         var defaultCorruptionType = 'احتكار'; // Default corruption type
         var option1;
@@ -102,4 +122,5 @@
             }
         });
     </script>
+    
     
