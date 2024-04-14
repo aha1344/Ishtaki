@@ -6,74 +6,100 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 </head>
 <body>
+    <label for="corruptionTypeSelect">نوع الفساد:</label>
+    <select id="corruptionTypeSelect">
+    {% for value, name in corruption_types %}
+    <option value="{{ value }}" {% if value == "احتكار" %}selected{% endif %}>{{ name }}</option>
+    {% endfor %}
+    <option value="none">كل الانواع</option>
+    </select>
+
     <div id="main" style="width: 600px; height: 400px;"></div>
     <div id="main2" style="width: 1200px; height: 400px;"></div>
-
-    <script>    
-        var myChart = echarts.init(document.getElementById('main'));
-        // basically saying i want a chart named mychart inside the div main
-        var myChart2 = echarts.init(document.getElementById('main2'))
     
-        var sectorType = '{{ sector_type }}'; 
-        // now we send a request to the server to fetch the report statistics
-        fetch(`/ajax/load_statistics/${sectorType}/`)
+    <script>
+        var sectorType = '{{ sector_type }}'; // in url
+        var defaultCorruptionType = 'احتكار'; // Default corruption type
+        var option1;
+    
+        var myChart1 = echarts.init(document.getElementById('main')); // This will display temporal statistics
+        var myChart2 = echarts.init(document.getElementById('main2')); // This will display count statistics per corruption type
+    
+        // loads initial data for the corruption type count chart
+        fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=none`)
             .then(response => response.json())
             .then(data => {
-                // each option contains the settings for a chart
-                var option = {
-                    title: {
-                        text: 'Report Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1)
-                    },
-                    tooltip: {},
-                    legend: {
-                        data: ['Total']
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: data.public_sector_type_count.map(item => item.year)
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [{
-                        type: 'bar',
-                        data: data.public_sector_type_count.map(item => item.total)
-                    }]
+                 option1 = {
+                    title: { text: 'Temporal Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1) },
+                    tooltip: {}, 
+                    legend: { data: ['Total'] },
+                    xAxis: { type: 'category', data: data.temporal_sector_type_count.map(item => item.year) },
+                    yAxis: { type: 'value' },
+                    series: [{ type: 'bar', data: data.temporal_sector_type_count.map(item => item.total) }]
                 };
-
+    
                 var option2 = {
-                    title: {
-                        text: 'Report Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1) + ' per Corruption Type'
-                    },
-                    tooltip: {},
-                    legend: {
-                        data: ['Total']
-                    },
+                    title: { text: 'Count Statistics for ' + sectorType +  ' per Corruption Type' },
+                    tooltip: {}, 
+                    legend: { data: ['Total'] },
                     xAxis: {
-                        type: 'category',
-                        data: data.public_sector_per_ct_count.map(item => item.corruption_type),
-                        // set corruption type as x-axis
-                        axisLabel: {
-                            interval: 0, 
-                            rotate: 45,   //Rotate labels to fit more categories
-                    }
-                },
-                    yAxis: {
-                        type: 'value'
+                        type: 'category', 
+                        data: data.sector_count_per_corruption_type.map(item => item.corruption_type), 
+                        axisLabel: { interval: 0, rotate: 45 }
                     },
-                    series: [{
-                        type: 'line',
-                        // type of chart
-                        data: data.public_sector_per_ct_count.map(item => item.total),
-                        // set total, which in the statistics view was set equal to the count within each sector type, as the y - axis
-                        itemStyle: {color: 'green'}
-                    }]
+                    yAxis: { type: 'value' },
+                    series: [{ type: 'line', data: data.sector_count_per_corruption_type.map(item => item.total), itemStyle: { color: 'green' } }]
                 };
-                
-                // setOption displays the chart using the options/settings we chose
-                myChart.setOption(option);
+    
                 myChart2.setOption(option2);
             })
             .catch(error => console.error('Error loading the data:', error));
+    
+        // loads the temporal sector type - corruption type chart with default corruption type data 
+        fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=${defaultCorruptionType}`)
+            .then(response => response.json())
+            .then(data => {
+                var option3 = {
+                    title: { text: 'Temporal Statistics for ' + sectorType + ' per ' + defaultCorruptionType},
+                    tooltip: {}, 
+                    legend: { data: ['Total'] },
+                    xAxis: {
+                        type: 'category', 
+                        data: data.temporal_sector_type_ct_count.map(item => item.year), 
+                        axisLabel: { interval: 0, rotate: 45 }
+                    },
+                    yAxis: { type: 'value' },
+                    series: [{ type: 'bar', data: data.temporal_sector_type_ct_count.map(item => item.total), itemStyle: { color: 'blue' } }]
+                };
+                myChart1.setOption(option3);
+            })
+            .catch(error => console.error('Error loading the data:', error));
+    
+        // changes temporal sector type - corruption data chart based on change in dropdown 
+        document.getElementById('corruptionTypeSelect').addEventListener('change', function() {
+            var corruptionType = this.value;
+            if (corruptionType !== 'none') {
+                fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=${corruptionType}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var option3 = {
+                            title: { text: 'Detailed Statistics for ' + sectorType +  ' per ' + corruptionType },
+                            tooltip: {}, 
+                            legend: { data: ['Total'] },
+                            xAxis: {
+                                type: 'category', 
+                                data: data.temporal_sector_type_ct_count.map(item => item.year), 
+                                axisLabel: { interval: 0, rotate: 45 }
+                            },
+                            yAxis: { type: 'value' },
+                            series: [{ type: 'bar', data: data.temporal_sector_type_ct_count.map(item => item.total), itemStyle: { color: 'blue' } }]
+                        };
+                        myChart1.setOption(option3);
+                    })
+                    .catch(error => console.error('Error loading the data:', error));
+            } else {
+                myChart1.setOption(option1);
+            }
+        });
     </script>
     
