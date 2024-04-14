@@ -49,32 +49,43 @@ def report_view(request):
 
 # renders the visualization page for every sector type
 def statistics(request, sector_type):
-    return render(request, 'report/statistics.html', {'sector_type':sector_type})
+    return render(request, 'report/statistics.html', {'sector_type':sector_type, 'corruption_types':corruption_types})
 
 # function that catches an ajax request to send report statistics as a json response to the statistics html page. 
 # to add an aggregation just add it inside this function and put in context
 def load_statistics(request, sector_type):
 
+    corruption_type_chosen = request.GET.get('corruption_type', 'none')
+
     # Aggregate counts by sector type (filtering by a specific sector type)
-    public_sector_type_count = list(Report.objects
+    temporal_sector_type_count = list(Report.objects
                                     .filter(public_sector_type=sector_type)
                                     .annotate(year=ExtractYear('date_of_incident'))
                                     .values('year')
                                     .annotate(total=Count('id'))
                                     .order_by('year'))
-    corruption_type_list = [choice[0] for choice in corruption_types]
+    
+    temporal_sector_type_ct_count= list(Report.objects
+                                    .filter(public_sector_type=sector_type, corruption_type=corruption_type_chosen)
+                                    .annotate(year=ExtractYear('date_of_incident'))
+                                    .values('year')
+                                    .annotate(total=Count('id'))
+                                    .order_by('year'))
 
 # Counting reports per corruption type in a specific public sector
-    pb_count_per_corruption_type = list(Report.objects
+    sector_count_per_corruption_type = list(Report.objects
                                      .filter(public_sector_type=sector_type)
                                      .values('corruption_type')  # Group by corruption type
                                      .annotate(total=Count('id'))  # Count occurrences
-                                     )  
+                                     )
+    
 
+        
 
     context = {
-        'public_sector_type_count': public_sector_type_count,
-        'public_sector_per_ct_count': pb_count_per_corruption_type,
+        'temporal_sector_type_count': temporal_sector_type_count,
+        'temporal_sector_type_ct_count': temporal_sector_type_ct_count,
+        'sector_count_per_corruption_type':sector_count_per_corruption_type,
     }
 
     return JsonResponse(context)
