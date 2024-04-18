@@ -19,15 +19,17 @@
 
     
     <label for="corruptionTypeSelect">نوع الفساد:</label>
-    <select id="corruptionTypeSelect">
+    <select id="corruptionTypeSelect" multiple>
+    <option value="all">كل الانواع</option>
     {% for value, name in corruption_types %}
     <option value="{{ value }}" {% if value == "احتكار" %}selected{% endif %}>{{ name }}</option>
     {% endfor %}
-    <option value="none">كل الانواع</option>
     </select>
 
-    <div id="main" style="width: 600px; height: 400px;"></div>
+    <div id="main" style="width: 1000px; height: 400px;"></div>
     <div id="main2" style="width: 1200px; height: 400px;"></div>
+    <div id="main3" style="width: 1400px; height: 600px;"></div>
+
     
     <script>
         document.getElementById('sectorTypeSelect').addEventListener('change', function() {
@@ -40,27 +42,42 @@
 
         var sectorType = '{{ sector_type }}'; // in url
         var defaultCorruptionType = 'احتكار'; // Default corruption type
-        var option1;
+        var TemporalChart;
     
         var myChart1 = echarts.init(document.getElementById('main')); // This will display temporal statistics
         var myChart2 = echarts.init(document.getElementById('main2')); // This will display count statistics per corruption type
+        var myChart3 = echarts.init(document.getElementById('main3')); // This will display count statistics per corruption type
+
     
-        // loads initial data for the corruption type count chart
-        fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=none`)
+        // loads statistics for the corruption type count chart
+        fetch(`/ajax/load_statistics/${sectorType}/`)
             .then(response => response.json())
             .then(data => {
-                 option1 = {
+                if (!data.temporal_sector_type_count || data.temporal_sector_type_count.length === 0) {
+                    displayNoDataMessage(myChart1);
+                }
+                 TemporalChart = {
                     title: { text: 'Temporal Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1) },
                     tooltip: {}, 
+                    dataZoom: [{
+                        type: 'slider', // This is the type that allows for a sliding bar graph feature
+                        start: 0, // Starting position of the zoom in percentage (0%)
+                        end: 50 // Ending position of the zoom in percentage (50%)
+                    }],
                     legend: { data: ['Total'] },
                     xAxis: { type: 'category', data: data.temporal_sector_type_count.map(item => item.year) },
                     yAxis: { type: 'value' },
                     series: [{ type: 'bar', data: data.temporal_sector_type_count.map(item => item.total) }]
                 };
     
-                var option2 = {
+                var corruptionTypeChart = {
                     title: { text: 'Count Statistics for ' + sectorType +  ' per Corruption Type' },
                     tooltip: {}, 
+                    dataZoom: [{
+                        type: 'slider', // This is the type that allows for a sliding bar graph feature
+                        start: 0, // Starting position of the zoom in percentage (0%)
+                        end: 50 // Ending position of the zoom in percentage (50%)
+                    }],
                     legend: { data: ['Total'] },
                     xAxis: {
                         type: 'category', 
@@ -68,20 +85,28 @@
                         axisLabel: { interval: 0, rotate: 45 }
                     },
                     yAxis: { type: 'value' },
-                    series: [{ type: 'line', data: data.sector_count_per_corruption_type.map(item => item.total), itemStyle: { color: 'green' } }]
+                    series: [{ type: 'bar', data: data.sector_count_per_corruption_type.map(item => item.total), itemStyle: { color: 'green' } }]
                 };
     
-                myChart2.setOption(option2);
+                myChart2.setOption(corruptionTypeChart);
             })
-            .catch(error => console.error('Error loading the data:', error));
+            .catch(error => console.error('Error loading the data:', error))
     
         // loads the temporal sector type - corruption type chart with default corruption type data 
         fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=${defaultCorruptionType}`)
             .then(response => response.json())
             .then(data => {
-                var option3 = {
+                if (!data.temporal_sector_type_ct_count || data.temporal_sector_type_ct_count.length === 0) {
+                    displayNoDataMessage(myChart1);
+                }
+                var TemporalDefaultCorruptionType = {
                     title: { text: 'Temporal Statistics for ' + sectorType + ' per ' + defaultCorruptionType},
-                    tooltip: {}, 
+                    tooltip: {},
+                    dataZoom: [{
+                        type: 'slider', // This is the type that allows for a sliding bar graph feature
+                        start: 0, // Starting position of the zoom in percentage (0%)
+                        end: 50 // Ending position of the zoom in percentage (50%)
+                    }], 
                     legend: { data: ['Total'] },
                     xAxis: {
                         type: 'category', 
@@ -91,36 +116,127 @@
                     yAxis: { type: 'value' },
                     series: [{ type: 'bar', data: data.temporal_sector_type_ct_count.map(item => item.total), itemStyle: { color: 'blue' } }]
                 };
-                myChart1.setOption(option3);
+                myChart1.setOption(TemporalDefaultCorruptionType);
             })
             .catch(error => console.error('Error loading the data:', error));
     
         // changes temporal sector type - corruption data chart based on change in dropdown 
         document.getElementById('corruptionTypeSelect').addEventListener('change', function() {
-            var corruptionType = this.value;
-            if (corruptionType !== 'none') {
-                fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=${corruptionType}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        var option3 = {
-                            title: { text: 'Detailed Statistics for ' + sectorType +  ' per ' + corruptionType },
-                            tooltip: {}, 
+            myChart1.clear();
+            let selectedOptions = document.getElementById('corruptionTypeSelect').selectedOptions;
+            let corruptionTypes = Array.from(selectedOptions).map(option => option.value);
+            let corruptionTypesString = corruptionTypes.join(' - ');
+
+            let isAllSelected = corruptionTypes.includes('all');
+            let queryString = isAllSelected ? '' : corruptionTypes.map(type => `corruption_type[]=${type}`).join('&');
+        
+            fetch(`/ajax/load_statistics/${sectorType}/?${queryString}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.temporal_sector_type_ct_count || data.temporal_sector_type_ct_count.length === 0) {
+                        displayNoDataMessage(myChart1);
+                        return;  // Return early to avoid further execution when no data is available
+                    }
+                    // Only update the chart if 'all' is not selected
+                    if (!isAllSelected) {
+                        var TemporalWithCorruptionType = {
+                            title: { text: 'Detailed Statistics for ' + sectorType + ' per ' + corruptionTypesString },
+                            tooltip: {},
                             legend: { data: ['Total'] },
                             xAxis: {
-                                type: 'category', 
-                                data: data.temporal_sector_type_ct_count.map(item => item.year), 
+                                type: 'category',
+                                data: data.temporal_sector_type_ct_count.map(item => item.year),
                                 axisLabel: { interval: 0, rotate: 45 }
                             },
                             yAxis: { type: 'value' },
-                            series: [{ type: 'bar', data: data.temporal_sector_type_ct_count.map(item => item.total), itemStyle: { color: 'blue' } }]
+                            series: [{
+                                type: 'bar',
+                                data: data.temporal_sector_type_ct_count.map(item => item.total),
+                                itemStyle: { color: 'blue' }
+                            }]
                         };
-                        myChart1.setOption(option3);
-                    })
-                    .catch(error => console.error('Error loading the data:', error));
-            } else {
-                myChart1.setOption(option1);
-            }
+                        myChart1.setOption(TemporalWithCorruptionType);
+                    }
+                    else{
+                        myChart1.setOption(TemporalChart);   
+                    }
+                })
+                .catch(error => console.error('Error loading the data:', error));
         });
+        
+        function displayNoDataMessage(chart) {
+            chart.clear();
+        
+            chart.setOption({
+                graphic: {
+                    type: 'text',
+                    left: 'center', 
+                    top: 'center', 
+                    style: {
+                        text: 'No information about this',
+                        fill: '#333',
+                        fontSize: 20
+                    }
+                }
+            });
+        }
+        fetch(`/ajax/load_statistics/${sectorType}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.sector_name_data || data.sector_name_data.length === 0) {
+                    displayNoDataMessage(myChart3);
+                }
+                var pieChartSectors = {
+                    title: {
+                        text: 'Stats for ' + sectorType,
+                        left: '0%',  // Centers the title horizontally
+                        top: '0%'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}: {c} ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        top: 'middle',
+                        fontSize: 16,
+                    },
+                    series: [{
+                        name: sectorType,
+                        type: 'pie',
+                        center: ['50%', '50%'], 
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'outside',
+                                fontSize: 16,
+                            }
+                        },
+                        radius: '50%',
+                        data: data.sector_name_data.map(item => ({
+                            name: extractSecondPart(item.name),
+                            value: item.value
+                        })),                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }]
+                };
+                myChart3.setOption(pieChartSectors);
+                console.log(data.sector_name_data);
+            })
+            .catch(error => console.error('Error loading the data:', error))
+
+
+            function extractSecondPart(nameString) {
+                let trimmed = nameString.slice(1, nameString.length - 1); // Remove outer parentheses
+                let parts = trimmed.split(','); // Split by comma
+                return parts[1].trim().slice(1, -1); // Remove quotes and whitespace
+            }
     </script>
     
     

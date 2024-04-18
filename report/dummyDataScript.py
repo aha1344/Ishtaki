@@ -19,9 +19,7 @@ sector_names_mapping = {
     'prisons': choices.prisons,
     'courts': choices.courts,
     'universities': choices.universities,
-    'military': choices.military,
-    'police': choices.police,
-    'general_security': choices.general_security,
+    'security_institutions' : choices.security_institutions,
 }
 
 corruption_types = [choice[0] for choice in choices.corruption_types]
