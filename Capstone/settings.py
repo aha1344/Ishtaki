@@ -53,21 +53,21 @@ MIDDLEWARE = [
 ]
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Db',  
-        # change name to database name on your laptop
-        'USER': 'moham',  
-        # change user to ur database user name on your laptop
-        'PASSWORD': '123',  
-        # password of your user
-        'HOST': 'localhost',
-        'PORT': '5432',  
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'Db',  
+    #     # change name to database name on your laptop
+    #     'USER': 'moham',  
+    #     # change user to ur database user name on your laptop
+    #     'PASSWORD': '123',  
+    #     # password of your user
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',  
+    # }
 }
 
 
