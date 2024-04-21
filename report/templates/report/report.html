@@ -42,12 +42,12 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var sectorTypeSelect = document.getElementById('id_public_sector_type');
-  var sectorNameSelect = document.getElementById('id_public_sector_name');
+  var sectorTypeSelect = document.getElementById('public_sector_type_id');
+  var sectorNameSelect = document.getElementById('public_sector_name_id');
 
   sectorTypeSelect.addEventListener('change', function() {
-    var sectorTypeId = this.value;
-    var url = '/ajax/load_sector_names/?sector_type=' + sectorTypeId;
+    let sectorType = this.value;
+    let url = '/ajax/load_sector_names/?sector_type=' + sectorType;
 
     fetch(url)
       .then(response => response.json())

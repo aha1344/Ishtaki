@@ -122,6 +122,8 @@
                 float: right;
             }
     </style>
+    {% block extra_head %}
+    {% endblock extra_head %}
 </head>
 <body>
     <header>
@@ -137,15 +139,15 @@
                         نوع القطاع
                     </a> 
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink" style=" margin-right: 320px; margin-left: -400px;">
-                      <li><a class="dropdown-item" href="#">مستشفيات</a></li>
-                      <li><a class="dropdown-item" href="#">وزارات</a></li>
-                      <li><a class="dropdown-item" href="#">مؤسسات</a></li>
-                      <li><a class="dropdown-item" href="#">بنوك</a></li>
-                      <li><a class="dropdown-item" href="#">سجون</a></li>
-                      <li><a class="dropdown-item" href="#">محاكم</a></li>
-                      <li><a class="dropdown-item" href="#">جامعات</a></li>
-                      <li><a class="dropdown-item" href="#">مؤسسات أمنية </a></li>
-                    </ul>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='hospitals' %}">مستشفيات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='ministries' %}">وزارات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='institutions' %}">مؤسسات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='banks' %}">بنوك</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='prisons' %}">سجون</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='courts' %}">محاكم</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='universities' %}">جامعات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='security_institutions' %}">مؤسسات امنية</a></li>
+                </ul>
                   </li>
                 </ul>
               </div>
@@ -168,5 +170,9 @@
         <p style="color:white; float:right;">&copy; 2024 Your Site Name. All rights reserved.</p>
         {% endblock footer %}
     </footer>
+
+    {% block scripts %}
+    {% endblock %}
+
 </body>
 </html>
