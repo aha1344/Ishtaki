@@ -24,7 +24,7 @@ def load_sector_names(request):
         names = courts
     elif sector_type == 'universities':
         names = universities
-    elif sector_type == 'security institutions':
+    elif sector_type == 'security_institutions':
         names = security_institutions
     return JsonResponse(names, safe=False)
 
