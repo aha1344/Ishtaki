@@ -44,6 +44,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   var sectorTypeSelect = document.getElementById('public_sector_type_id');
   var sectorNameSelect = document.getElementById('public_sector_name_id');
+   sectorTypeSelect.value = ''
 
   sectorTypeSelect.addEventListener('change', function() {
     let sectorType = this.value;
