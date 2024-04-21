@@ -35,7 +35,7 @@ def report_view(request):
         form = ReportForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/admin/')
+            return redirect('/home/')
     else:
         form = ReportForm() # get an empty form 
     return render(request, 'report/report.html', {'form': form})
@@ -63,11 +63,10 @@ def load_statistics(request, sector_type):
     else:
         filtered_query = Report.objects.filter(public_sector_type=sector_type)
 
-    temporal_sector_type_ct_count= list(filtered_query
-                                    .annotate(year=ExtractYear('date_of_incident'))
-                                    .values('year')
-                                    .annotate(total=Count('id'))
-                                    .order_by('year'))
+    
+    temporal_sector_type_ct_count= list(filtered_query.annotate(year=ExtractYear('date_of_incident')).values('year', 'corruption_type').annotate(total=Count('id')).order_by('year', 'corruption_type'))
+
+
 
     # Counting reports per corruption type in a specific public sector
     sector_count_per_corruption_type = list(Report.objects
@@ -92,5 +91,5 @@ def load_statistics(request, sector_type):
 
 # function to display home page.
 def HomePage(request):
-    sectors  = [sector[1] for sector in sector_types]
+    sectors =  [sector for sector in sector_types]
     return render(request, "report/home.html", {"sectors":sectors})
