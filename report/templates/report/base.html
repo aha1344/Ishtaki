@@ -2,228 +2,265 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            .fancy {
-                line-height: 0.5;
-                text-align: center;
-            }
-    
-            .fancy span {
-                display: inline-block;
-                position: relative;
-            }
- 
-            .fancy span:after {
-                content: "";
-                position: absolute;
-                height: 5px;
-                border-bottom: 1px solid black;
-                border-top: 1px solid black;
-                top: 0;
-                width: 600px;
-            }
-    
-            .fancy span:before{
-                content: "";
-                position: absolute;
-                height: 5px;
-                border-bottom: 1px solid black;
-                border-top: 1px solid black;
-                top: 0;
-                width: 570px; 
-            }
+    <style>
+        .fancy {
+    line-height: 0.5;
+    text-align: center;
+}
 
-            .fancy span:before {
-                right: 100%;
-                margin-right: 15px;
-            }
-    
-            .fancy span:after {
-                left: 100%;
-                margin-left: 15px;
-            }
+.fancy span {
+    display: inline-block;
+    position: relative;
+}
 
-            .card {
-                background-image: linear-gradient(to left, rgb(239, 68, 68), rgb(153, 27, 27));
-                padding: 30px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                position: relative; 
-                z-index: 1;
-                width: 33rem;
-                margin-top: 50px;
-                margin-bottom: 20px;
-                margin-right: 460px;
-            }
-            .cap{
-                margin-top:10px;
-                margin-bottom:8px;
-                margin-right: 80px;
-            }
-            p {
-                font-size: 18px;
-                color: #333;
-                margin-top: 0;
-            }
-            
-            form p {
-                margin-bottom: 5px;
-            }
-            
-            form input[type="text"],
-            form select,
-            form input[type="datetime-local"] {
-                width: 100%;
-                padding: 10px;
-                margin-bottom: 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                box-sizing: border-box;
-            }
-            
-            form button {
-                background-color: #5cb85c;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 18px;
-                margin-right: 180px; 
-            }
-            
-            form button:hover {
-                background-color: #3c8b3c;
-            }
-            
-            ul.list-group.list-group-flush {
-                list-style-type: none;
-                padding: 20px;
-                border-radius: 8px;
-                margin-top: -1px;
-                padding: 12px;
-                background: rgba(255, 255, 255, 0.7); 
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-            
-            ul li.list-group-item {
-                margin-top: -1px;
-                background-color: #f6f6f6; 
-                padding: 12px;
-                background: rgba(255, 255, 255, 0.7); 
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-            p.list-group-item{
-                float: right;
-            }
-            .navbar-nav {
-                display: flex;
-                justify-content: space-around; /* Distribute items evenly */
-                width: 100%; /* Ensure full width */
-            }
-            .navbar-nav .nav-item {
-                flex: 1; /* Equal space for each item */
-                text-align: center; /* Center the text */
-            }
-            .navbar-nav .nav-link {
-                text-decoration: none;
-                color: white;
-                font-size: 140%; /* Consistent font size */
-            }
-            nav.navbar.navbar-expand-lg {
-                display: flex;
-                justify-content: center;
-                padding: 0.005rem 10rem;
-            }
-            
-            nav.navbar.navbar-expand-lg:hover  {
-                color: grey;
-            }
-            a#rep{
-                display: flex;
-                justify-content: center;
-                width: 100%;
-                margin-right: 5%;
-            }
-            #rep:hover{
-                width: 100%;
-                height: 100%;
-                color: black;
-            }
-              .dropdown-menu {
-                text-align: right; 
-              }
-            
-              div#navbarNavDarkDropdown.collapse.navbar-collapse{
-                display: flex;
-                justify-content: center;
-              }
-              a#rep.nav-link.dropdown-toggle::after{
-                margin-top: 16%;
-                margin-right: 10%;
-              }
-              .navbar-nav .dropdown-menu {
-                position: absolute;
-                top: 100%; /* Ensure it appears below the navbar */
-                left: 0; /* Align with the left edge of the navbar */
-                width: 100%; /* Full width */
-                display: none; /* Hide by default */
-            }
-    
-            .navbar-nav .dropdown-menu.show {
-                display: flex; /* Show when toggled */
-                flex-direction: row; /* Horizontal layout */
-                justify-content: space-around; /* Spread items evenly */
-                z-index: 1000; /* Ensure it's on top */
-            }
-            .nav-item {
-                display: flex;
-                justify-content: center;
-                width: 100%;
-            }
+.fancy span:after,
+.fancy span:before {
+    content: "";
+    position: absolute;
+    height: 5px;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    top: 0;
+    width: 600px;
+}
+
+.fancy span:before {
+    right: 100%;
+    margin-right: 15px;
+    width: 570px; 
+}
+
+.fancy span:after {
+    left: 100%;
+    margin-left: 15px;
+}
+
+.card {
+    background-image: linear-gradient(to left, rgb(239, 68, 68), rgb(153, 27, 27));
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; 
+    z-index: 1;
+    width: 33rem;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-right: 460px;
+}
+
+.cap {
+    margin-top: 10px;
+    margin-bottom: 8px;
+    margin-right: 80px;
+}
+
+p {
+    font-size: 18px;
+    color: #333;
+    margin-top: 0;
+}
+
+form p {
+    margin-bottom: 5px;
+}
+
+form input[type="text"],
+form select,
+form input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 180px; 
+}
+
+form button:hover {
+    background-color: #3c8b3c;
+}
+
+ul.list-group.list-group-flush {
+    list-style-type: none;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: -1px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+ul li.list-group-item {
+    margin-top: -1px;
+    background-color: #f6f6f6;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+p.list-group-item {
+    float: right;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.navbar-nav .nav-item {
+    flex: 1;
+    text-align: center;
+}
+
+.navbar-nav .nav-link {
+    text-decoration: none;
+    color: white;
+    font-size: 140%;
+}
+
+nav.navbar.navbar-expand-lg {
+    display: flex;
+    justify-content: center;
+    padding: 0.005rem 10rem;
+}
+
+nav.navbar.navbar-expand-lg:hover {
+    color: grey;
+}
+
+a#rep {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-right: 5%;
+}
+
+#rep:hover {
+    width: 100%;
+    height: 100%;
+    color: black;
+}
+
+.navbar-custom {
+    background: rgba(196, 30, 58);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    width: 100%; 
+}
+
+.navbar-custom .navbar-brand img {
+    height: 40px;
+    width: auto;
+}
+
+.navbar-custom .nav-link {
+    color: #fff;
+    padding: 10px 15px;
+    transition: color 0.3s;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link:focus {
+    color: #c0c0c0;
+    text-decoration: underline;
+}
+
+.navbar-custom .dropdown-menu {
+    width: inherit; /* Adjust the width to match the parent */
+    display: none;
+    flex-direction: row; /* Align dropdown items horizontally */
+    justify-content: space-around; /* Even spacing between dropdown items */
+    background-color: #fff; /* Background color for visibility */
+    box-shadow: 0 2px 5px rgba(5,5,4,4); /* Subtle shadow for depth */
+    border: none; /* Remove default borders */
+    z-index: 1050; /* High z-index to ensure it appears on top of other content */
+}
+
+.navbar-custom .dropdown:hover .dropdown-menu {
+    display: flex; /* Display flex to align items horizontally on hover */
+}
+
+.navbar-custom .dropdown-item {
+    flex: 1;  /* Each item takes equal space */
+    color: #333; /* Dark text color for visibility */
+    text-align: center; /* Center text */
+    padding: 10px 30px; /* Adequate padding */
+    font-size: 16px; /* Readable font size */
+    background-color: transparent; /* Clear background */
+    border: none; /* No borders */
+}
+.container-fluid {
+    width: 100%;
+    padding: 0;
+}
+
+.navbar-custom .dropdown-item:hover {
+    background-color: #f8f9fa; /* Light background on hover */
+}
+
+@media (max-width: 768px) {
+    .navbar-custom {
+        text-align: center;
+    }
+}
+
     </style>
 </head>
 <body>
     <header>
-        {% block navbar %}
-        <nav class="navbar navbar-expand-lg" style="display: flex; justify-content: center; background: rgba(196, 30, 58);">
-            <a class="navbar-brand" href="/home">
-                <img src="{% static '/report/images/logo.png' %}" alt="no image" width="70" height="70" style="border-radius: 70px; margin-right: -150%;" >
-            </a>
-            <div class="collapse navbar-collapse" id="navbarNavDarkDropdown" >
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a id="rep" href="/home" role="button" style=" text-decoration: none; color: white; font-size: 140%; " >من نحن</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" aria-expanded="false" style="color: white; font-size: 140%; width: 100%;">
-                        نوع القطاع
-                        </a> 
-                    </li>
-                    <li class="nav-item">
-                        <a id="rep" href="/report" role="button" style="text-decoration: none; color: white; font-size: 140%;" >تقرير</a>
-                    </li>
-                  <li class="nav-item">
-                        <a id="rep" href="/statistics/" role="button" style=" text-decoration: none; color: white; font-size: 140%; ">رسم الخرائط الجغرافية</a>
-                    </li>
-                </ul>
-              </div>
-            </div>
+        <nav class="navbar navbar-expand-lg navbar-custom">
             <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarSupportedContent" ></div>
+                <a class="navbar-brand" href="/home">
+                    <img src="{% static '/report/images/logo1.png' %}" alt="Logo" style="border-radius: 50%;" >
+                </a>
+                <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/home">من نحن</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                نوع القطاع
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='hospitals' %}">مستشفيات</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='ministries' %}">وزارات</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='institutions' %}">مؤسسات</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='banks' %}">بنوك</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='prisons' %}">سجون</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='courts' %}">محاكم</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='universities' %}">جامعات</a></li>
+                                <li><a class="dropdown-item" href="{% url 'statistics' sector_type='security_institutions' %}">مؤسسات امنية</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/report">تقرير</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/statistics/">رسم الخرائط الجغرافية</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
-        <nav class="secondary-navbar" id="secondary-navbar" style="display: none; background: linear-gradient(to left, rgb(239, 68, 68), rgb(153, 27, 27));">
-            
-        </nav>
-        {% endblock navbar %}
     </header>
+      
     <main>
         {% block content %}
         <!-- This is where your page content will go. -->
@@ -241,6 +278,17 @@
             const secondaryNavbar = document.getElementById('secondary-navbar');
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
             secondaryNavbar.style.display = isExpanded ? 'flex' : 'none';
+        });
+        $(document).ready(function(){
+            // Improved hover behavior
+            $('.dropdown').hover(
+                function() {
+                    $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn();  // Delay and fade in for smoother dropdown
+                }, 
+                function() {
+                    $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut();  // Delay and fade out
+                }
+            );
         });
     </script>
 </body>
