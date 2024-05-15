@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from report.models import Report
 from report import choices
 
-# this file is a script that can be used to populat the database with dummy data. To do so, go to terminal:
+# this file is a script that can be used to populate the database with dummy data. To do so, go to terminal:
 # python manage.py shell
 # copy this whole page and paste it there and press enter.
 

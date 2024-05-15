@@ -8,5 +8,8 @@ urlpatterns = [
     path('home/', views.HomePage, name="HomePage"),
     path('statistics/<str:sector_type>/', views.statistics, name='statistics'),
     path('ajax/load_statistics/<str:sector_type>/', views.load_statistics, name='ajax_load_statistics'),
+    path('userdocumentation/', views.user_documentation, name="user_documentation"),
+    path('developerdocumentation/', views.developer_documentation, name="developer_documentation"),
+
     # we wont use the load sector path, its just for ajax purposes.
 ]

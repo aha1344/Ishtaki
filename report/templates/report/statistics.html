@@ -31,10 +31,10 @@
 
 <div id="main" style="width: 1000px; height: 400px;"></div>
 <div id="main2" style="width: 1200px; height: 400px;"></div>
-<div id="main3" style="width: 1400px; height: 600px;"></div>
+<div id="main3" style="width: 1200px; height: 400px;"></div>
 
 <script>
-        // change ector type page when its changed
+        // change sector type page when its changed
         document.getElementById('sectorTypeSelect').addEventListener('change', function() {
             var sectorType = this.value;
             if (sectorType) {
@@ -52,14 +52,33 @@
         
         // Settings for Chart 2
         function createCountCorruptionTypeStatisticsChart(chartType, data){
+
             var options = {
                 title: { text: 'Count Statistics for ' + sectorType +  ' per Corruption Type' },
                 tooltip: {}, 
-                dataZoom: [{
-                    type: 'slider', // This is the type that allows for a sliding bar graph feature
-                    start: 0, // Starting position of the zoom in percentage (0%)
-                    end: 50 // Ending position of the zoom in percentage (50%)
-                }],
+                toolbox: {
+                    show: true,
+                    orient: 'horizontal', // Horizontal or vertical
+                    left: 'right', // Position from left
+                    top: 'top', // Position from top
+                    feature: {
+                        mark: { show: true },
+                        dataView: {
+                            show: true,
+                            readOnly: true,
+                        },                    
+                        magicType: { show: true, type: ['line', 'bar', 'stack'] },
+                        saveAsImage: { show: true }
+                    },
+                    iconStyle: {
+                        borderColor: '#1e90ff' // Custom border color
+                    },
+                    emphasis: {
+                        iconStyle: {
+                            borderColor: '#bada55' // Custom border color on hover
+                        }
+                    },
+                },
                 legend: { data: ['Total'] },
                 xAxis: {
                     type: 'category', 
@@ -423,9 +442,14 @@
             })
         }
         function extractSecondPart(nameString) {
-            let trimmed = nameString.slice(1, nameString.length - 1); // Remove outer parentheses
+            console.log("Original input:", nameString);  // Debug output
+            if (!nameString) return "";  // Handle null, undefined, or empty string
+            let trimmed = nameString.slice(1, nameString.length - 1); // Remove outer parentheses if present
             let parts = trimmed.split(','); // Split by comma
-            return parts[1].trim().slice(1, -1); // Remove quotes and whitespace
+            console.log("Parts after split:", parts);  // Debug output
+            if (parts.length < 2) return trimmed;  // Return the trimmed string if it doesn't contain a comma
+            return parts[1].trim().slice(1, -1); // Remove quotes and whitespace around the second part
         }
+        
 </script>
 {% endblock %}

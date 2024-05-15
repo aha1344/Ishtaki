@@ -24,7 +24,7 @@ def load_sector_names(request):
         names = courts
     elif sector_type == 'universities':
         names = universities
-    elif sector_type == 'security institutions':
+    elif sector_type == 'security_institutions':
         names = security_institutions
     return JsonResponse(names, safe=False)
 
@@ -79,7 +79,6 @@ def load_statistics(request, sector_type):
                                     .values(name=F('public_sector_name'))
                                     .annotate(value=Count('id'))
                                     .order_by('name'))
-
     context = {
         'temporal_sector_type_count': temporal_sector_type_count,
         'temporal_sector_type_ct_count': temporal_sector_type_ct_count,
@@ -93,3 +92,10 @@ def load_statistics(request, sector_type):
 def HomePage(request):
     sectors =  [sector for sector in sector_types]
     return render(request, "report/home.html", {"sectors":sectors})
+
+def user_documentation(request):
+    return render(request, 'report/userdocumentation.html')
+
+
+def developer_documentation(request):
+    return render(request, 'report/developerdocumentation.html')
