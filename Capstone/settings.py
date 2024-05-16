@@ -10,7 +10,6 @@ SECRET_KEY = 'django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs
 DEBUG = False
 ALLOWED_HOSTS = ["ishtaki.azurewebsites.net", '127.0.0.1']
 
-
 # Static files settings
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -54,21 +53,21 @@ MIDDLEWARE = [
 # }
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Db',  
-        # change name to database name on your laptop
-        'USER': 'moham',  
-        # change user to ur database user name on your laptop
-        'PASSWORD': '123',  
-        # password of your user
-        'HOST': 'localhost',
-        'PORT': '5432',  
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'Db',  
+    #     # change name to database name on your laptop
+    #     'USER': 'moham',  
+    #     # change user to ur database user name on your laptop
+    #     'PASSWORD': '123',  
+    #     # password of your user
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',  
+    # }
 }
 
 ROOT_URLCONF = 'Capstone.urls'

@@ -1,0 +1,5 @@
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+.form-container { position: absolute; top: 10px; left: 10px; background: white; padding: 10px; border-radius: 5px; z-index: 1; }
+.legend-container { position: absolute; top: 150px; left: 10px; background: white; padding: 10px; border-radius: 5px; z-index: 1; max-height: 70vh; overflow-y: auto; display: none; }
+.legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+.legend-color { width: 20px; height: 20px; margin-right: 10px; }
