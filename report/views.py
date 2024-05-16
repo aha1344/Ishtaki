@@ -99,3 +99,7 @@ def user_documentation(request):
 
 def developer_documentation(request):
     return render(request, 'report/developerdocumentation.html')
+
+from django.http import HttpResponse
+from django.db import connection
+

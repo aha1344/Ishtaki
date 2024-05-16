@@ -7,25 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs''django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs'
 
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["ishtaki.azurewebsites.net", '127.0.0.1']
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
 
 # Static files settings
 STATIC_URL = '/static/'
@@ -53,39 +37,39 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-DATABASES = {
-    'default': {
-        
-        'ENGINE': 'mssql',
-        'NAME': 'db-ishtaki',
-        'USER': 'maf68',
-        'PASSWORD': 'Mhfaub2003',
-        'HOST':  'ishtaki-server.database.windows.net',  # Change to your server name
-        'PORT': '1433',  # Change to '5432' for PostgreSQL
-         'OPTIONS': {
-            'driver': 'ODBC Driver 18 for SQL Server',
-            'extra_params': 'TrustServerCertificate=yes',
-        },
-    }
-}
-
 # DATABASES = {
-#     # 'default': {
-#     #     'ENGINE': 'django.db.backends.sqlite3',
-#     #     'NAME': BASE_DIR / 'db.sqlite3',
-#     # }
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'Db',  
-#         # change name to database name on your laptop
-#         'USER': 'moham',  
-#         # change user to ur database user name on your laptop
-#         'PASSWORD': '123',  
-#         # password of your user
-#         'HOST': 'localhost',
-#         'PORT': '5432',  
+        
+#         'ENGINE': 'mssql',
+#         'NAME': 'db-ishtaki',
+#         'USER': 'maf68',
+#         'PASSWORD': 'Mhfaub2003',
+#         'HOST':  'ishtaki-server.database.windows.net',  # Change to your server name
+#         'PORT': '1433',  # Change to '5432' for PostgreSQL
+#          'OPTIONS': {
+#             'driver': 'ODBC Driver 18 for SQL Server',
+#             'extra_params': 'TrustServerCertificate=yes',
+#         },
 #     }
 # }
+
+DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Db',  
+        # change name to database name on your laptop
+        'USER': 'moham',  
+        # change user to ur database user name on your laptop
+        'PASSWORD': '123',  
+        # password of your user
+        'HOST': 'localhost',
+        'PORT': '5432',  
+    }
+}
 
 ROOT_URLCONF = 'Capstone.urls'
 

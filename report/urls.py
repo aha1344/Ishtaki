@@ -11,5 +11,7 @@ urlpatterns = [
     path('userdocumentation/', views.user_documentation, name="user_documentation"),
     path('developerdocumentation/', views.developer_documentation, name="developer_documentation"),
 
+
+
     # we wont use the load sector path, its just for ajax purposes.
 ]
