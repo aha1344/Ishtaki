@@ -39,11 +39,11 @@ MIDDLEWARE = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # Use 'django.db.backends.postgresql' for PostgreSQL
-        'NAME': os.environ.get('DB_NAME', 'db-ishtaki'),
-        'USER': os.environ.get('DB_USER', 'maf68'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'Mhfaub2003'),
-        'HOST': os.environ.get('DB_HOST', 'ishtaki-server.database.windows.net'),  # Change to your server name
-        'PORT': os.environ.get('DB_PORT', '1433'),  # Change to '5432' for PostgreSQL
+        'NAME': 'db-ishtaki',
+        'USER': 'maf68',
+        'PASSWORD': 'Mhfaub2003',
+        'HOST':  'ishtaki-server.database.windows.net',  # Change to your server name
+        'PORT': '1433',  # Change to '5432' for PostgreSQL
     }
 }
 
