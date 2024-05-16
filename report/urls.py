@@ -9,4 +9,5 @@ urlpatterns = [
     path('statistics/<str:sector_type>/', views.statistics, name='statistics'),
     path('ajax/load_statistics/<str:sector_type>/', views.load_statistics, name='ajax_load_statistics'),
     # we wont use the load sector path, its just for ajax purposes.
+    path('ajax/top_trending_corruption_types/', views.top_trending_corruption_types, name='top_trending_corruption_types'),
 ]

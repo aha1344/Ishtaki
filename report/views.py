@@ -6,6 +6,7 @@ from .models import Report
 from django.db.models import Count,F
 from django.db.models.functions import ExtractYear
 
+
 # function that accepts a get request to the server in order to retrieve the sector names associated with the sector type chosen in the form, return the sector names as JSON.
 def load_sector_names(request):
     sector_type = request.GET.get('sector_type')
@@ -24,7 +25,7 @@ def load_sector_names(request):
         names = courts
     elif sector_type == 'universities':
         names = universities
-    elif sector_type == 'security institutions':
+    elif sector_type == 'security_institutions':
         names = security_institutions
     return JsonResponse(names, safe=False)
 
@@ -35,7 +36,7 @@ def report_view(request):
         form = ReportForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/admin/')
+            return redirect('/home/')
     else:
         form = ReportForm() # get an empty form 
     return render(request, 'report/report.html', {'form': form})
@@ -63,11 +64,10 @@ def load_statistics(request, sector_type):
     else:
         filtered_query = Report.objects.filter(public_sector_type=sector_type)
 
-    temporal_sector_type_ct_count= list(filtered_query
-                                    .annotate(year=ExtractYear('date_of_incident'))
-                                    .values('year')
-                                    .annotate(total=Count('id'))
-                                    .order_by('year'))
+    
+    temporal_sector_type_ct_count= list(filtered_query.annotate(year=ExtractYear('date_of_incident')).values('year', 'corruption_type').annotate(total=Count('id')).order_by('year', 'corruption_type'))
+
+
 
     # Counting reports per corruption type in a specific public sector
     sector_count_per_corruption_type = list(Report.objects
@@ -80,7 +80,6 @@ def load_statistics(request, sector_type):
                                     .values(name=F('public_sector_name'))
                                     .annotate(value=Count('id'))
                                     .order_by('name'))
-
     context = {
         'temporal_sector_type_count': temporal_sector_type_count,
         'temporal_sector_type_ct_count': temporal_sector_type_ct_count,
@@ -94,3 +93,20 @@ def load_statistics(request, sector_type):
 def HomePage(request):
     sectors  = [sector[1] for sector in sector_types]
     return render(request, "report/home.html", {"sectors":sectors})
+
+# New view to fetch top 5 trending corruption types
+def top_trending_corruption_types(request):
+    top_corruption_types = Report.objects.values('corruption_type') \
+                                         .annotate(count=Count('id')) \
+                                         .order_by('-count')[:5]
+
+    response_data = {
+            'corruption_types': [
+                {
+                    'name': item['corruption_type'],  # Correct field name
+                    'count': item['count']
+                } for item in top_corruption_types
+            ]
+        }    
+    return JsonResponse(response_data)
+

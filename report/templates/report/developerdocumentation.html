@@ -1,0 +1,131 @@
+{% extends 'report/base.html' %}
+
+{% block content %}
+    <style>
+        body {
+            text-align: left;
+        }
+        main{
+            direction:ltr;
+            margin-left:5px;
+        }
+        pre code {
+            direction: ltr;
+            display: block;
+            padding: 10px;
+            margin: 0 0 10px;
+            font-size: 85%;
+            line-height: 1.45;
+            color: #333;
+            background-color: #f8f8f8;
+            border: 1px solid #e1e1e8;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+    
+    <main>
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>This documentation provides an overview of the existing setup and configuration of the whistleblowing website. The project uses Django 4.1.7 for the backend, Apache Echarts for data visualizations, and Mapbox GL JS for geo mapping. This guide will help you understand how to extend and build on top of this project.</p>
+            <p>If you want to look at the code, you can find it on our github via this <a href="https://github.com/maf68/Capstone-"> Link </a> </p>
+        </section>
+
+        <section id="setup">
+            <h2>Project Setup</h2>
+            <h3>Installation</h3>
+            <p>If you haven't set up the project yet, follow these steps:</p>
+            
+            <p>Clone the repository:</p>
+            <pre><code>git clone https://github.com/maf68/Capstone-.git</code></pre>
+
+            <p>Create a virtual environment:</p>
+            <pre><code>python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`</code></pre>
+
+            <p>Install dependencies:</p>
+            <pre><code>pip install -r requirements.txt</code></pre>
+
+            <p>Apply migrations:</p>
+            <pre><code>python manage.py migrate</code></pre>
+
+            <p>Create a superuser:</p>
+            <pre><code>python manage.py createsuperuser</code></pre>
+
+            <p>Run the development server:</p>
+            <pre><code>python manage.py runserver</code></pre>
+        </section>
+
+        <section id="configuration">
+            <h2>Configuration</h2>
+            <h3>Django Settings</h3>
+            <p>Key configuration settings for Django are located in <code>settings.py</code>. Below is an example of the database setup:</p>
+
+            <h3>Database Setup with PostgreSQL</h3>
+            <p>Follow these steps to set up PostgreSQL for your Django project:</p>
+
+            <h4>Install PostgreSQL</h4>
+            <p>For Ubuntu:</p>
+            <pre><code>sudo apt update
+sudo apt install postgresql postgresql-contrib</code></pre>
+
+            <p>For MacOS:</p>
+            <pre><code>brew install postgresql</code></pre>
+
+            <p>For Windows:</p>
+            <pre><code>Download and install from the official PostgreSQL website: https://www.postgresql.org/download/</code></pre>
+
+            <h4> Create a PostgreSQL Database and User</h4>
+            <p>Switch to the postgres user:</p>
+            <pre><code>sudo -i -u postgres</code></pre>
+
+            <p>Open PostgreSQL prompt:</p>
+            <pre><code>psql</code></pre>
+
+            <p>Create a new database:</p>
+            <pre><code>CREATE DATABASE your_db_name;</code></pre>
+
+            <p>Create a new user with a password:</p>
+            <pre><code>CREATE USER your_db_user WITH PASSWORD 'your_db_password';</code></pre>
+
+            <p>Grant all privileges on the database to the user:</p>
+            <pre><code>GRANT ALL PRIVILEGES ON DATABASE your_db_name TO your_db_user;</code></pre>
+
+            <p>Exit the PostgreSQL prompt:</p>
+            <pre><code>\q</code></pre>
+
+            <p>Exit the postgres user shell:</p>
+            <pre><code>exit</code></pre>
+
+            <h4> Update Django Settings</h4>
+            <pre><code>
+                DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.postgresql',
+                    'NAME': 'your_db_name',
+                    'USER': 'your_db_user',
+                    'PASSWORD': 'your_db_password',
+                    'HOST': 'localhost',
+                    'PORT': '5432',
+                }
+            }</code><pre>
+            
+        </section>
+
+        <section id="visualizations">
+            <h2>Data Visualizations with Apache Echarts</h2>
+            <p>Apache Echarts is used for creating interactive data visualizations. To integrate Echarts into your templates, include the Echarts library and add the necessary JavaScript for the charts.</p>
+
+            <p>For more details, refer to the <a href="https://echarts.apache.org/en/index.html" target="_blank">Apache Echarts documentation</a>.</p>
+
+
+        </section>
+
+        <section id="geomapping">
+            <h2>Geo Mapping with Mapbox GL JS</h2>
+            <p>Mapbox GL JS is used for geo mapping features. Include the Mapbox scripts and styles in your HTML templates where maps are needed.</p>
+
+            <p>For more details, refer to the <a href="https://docs.mapbox.com/mapbox-gl-js/api/" target="_blank">Mapbox GL JS documentation</a>.</p>
+        </section>
+    </main>
+{% endblock %}
