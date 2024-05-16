@@ -10,4 +10,7 @@ urlpatterns = [
     path('heatmap/', corruption_heatmap_view, name='corruption_heatmap'),
     path('corruption-heatmap/', corruption_heatmap_data_view, name='corruption_heatmap_data'),
     path('choices/', get_choices_view, name='get_choices'),
+    path('statistics/<str:sector_type>/', views.statistics, name='statistics'),
+    path('ajax/load_statistics/<str:sector_type>/', views.load_statistics, name='ajax_load_statistics'),
+    # we wont use the load sector path, its just for ajax purposes.
 ]

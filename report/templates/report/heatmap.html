@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Corruption Heatmap</title>
+    <meta charset="utf-8" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/deck.gl@8.4.0/dist.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'report/heatmap_style.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <form id="filter-form">
+            <label for="corruption_type">Corruption Type:</label>
+            <select id="corruption_type">
+                <option value="">All</option>
+            </select>
+            <br/>
+            <label for="public_sector_type">Sector Type:</label>
+            <select id="public_sector_type">
+                <option value="">All</option>
+            </select>
+            <br/>
+            <button type="submit">Filter</button>
+        </form>
+        <button id="toggle-legend-button">Toggle Legend</button>
+    </div>
+    <div id="map"></div>
+    <div class="legend-container" id="legend-container">
+    </div>
+    <script src="{% static 'report/heatmap.js' %}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

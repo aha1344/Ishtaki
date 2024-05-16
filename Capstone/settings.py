@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -52,16 +52,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'db',  
-#         'USER': 'ali', 
-#         'PASSWORD': 'Ali_faour03',  
-#         'HOST': 'localhost',
-#         'PORT': '5432',  
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -70,8 +60,11 @@ DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
     #     'NAME': 'Db',  
-    #     'USER': 'nour', 
-    #     'PASSWORD': 'nourCsfeir1523',  
+    #     # change name to database name on your laptop
+    #     'USER': 'moham',  
+    #     # change user to ur database user name on your laptop
+    #     'PASSWORD': '123',  
+    #     # password of your user
     #     'HOST': 'localhost',
     #     'PORT': '5432',  
     # }

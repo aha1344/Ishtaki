@@ -49,16 +49,20 @@
 
             .card {
                 background-image: linear-gradient(to left, rgb(239, 68, 68), rgb(153, 27, 27));
-                {% comment %} background: rgba(255, 255, 255, 0.1); {% endcomment %}
                 padding: 30px;
                 border-radius: 8px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 position: relative; 
                 z-index: 1;
-                width: 40rem;
+                width: 33rem;
                 margin-top: 50px;
                 margin-bottom: 20px;
-                margin-right: 520px;
+                margin-right: 460px;
+            }
+            .cap{
+                margin-top:10px;
+                margin-bottom:8px;
+                margin-right: 80px;
             }
             p {
                 font-size: 18px;
@@ -89,31 +93,37 @@
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 18px;
+                margin-right: 180px; 
             }
             
             form button:hover {
-                background-color: #4cae4c;
+                background-color: #3c8b3c;
             }
             
             ul.list-group.list-group-flush {
                 list-style-type: none;
                 padding: 20px;
                 border-radius: 8px;
+                margin-top: -1px;
+                padding: 12px;
+                background: rgba(255, 255, 255, 0.7); 
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
             
             ul li.list-group-item {
-                border: 1px solid #ddd; 
                 margin-top: -1px;
                 background-color: #f6f6f6; 
                 padding: 12px;
                 background: rgba(255, 255, 255, 0.7); 
-                border-radius: 8px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
             p.list-group-item{
                 float: right;
             }
     </style>
+    {% block extra_head %}
+    {% endblock extra_head %}
 </head>
 <body>
     <header>
@@ -129,17 +139,15 @@
                         نوع القطاع
                     </a> 
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink" style=" margin-right: 320px; margin-left: -400px;">
-                      <li><a class="dropdown-item" href="#">مستشفيات</a></li>
-                      <li><a class="dropdown-item" href="#">وزارات</a></li>
-                      <li><a class="dropdown-item" href="#">مؤسسات</a></li>
-                      <li><a class="dropdown-item" href="#">بنوك</a></li>
-                      <li><a class="dropdown-item" href="#">سجون</a></li>
-                      <li><a class="dropdown-item" href="#">محاكم</a></li>
-                      <li><a class="dropdown-item" href="#">جامعات</a></li>
-                      <li><a class="dropdown-item" href="#">جيش</a></li>
-                      <li><a class="dropdown-item" href="#">شرطة</a></li>
-                      <li><a class="dropdown-item" href="#">الأمن العام</a></li>
-                    </ul>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='hospitals' %}">مستشفيات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='ministries' %}">وزارات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='institutions' %}">مؤسسات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='banks' %}">بنوك</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='prisons' %}">سجون</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='courts' %}">محاكم</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='universities' %}">جامعات</a></li>
+                    <li><a class="dropdown-item" href="{% url 'statistics' sector_type='security_institutions' %}">مؤسسات امنية</a></li>
+                </ul>
                   </li>
                 </ul>
               </div>
@@ -162,5 +170,9 @@
         <p style="color:white; float:right;">&copy; 2024 Your Site Name. All rights reserved.</p>
         {% endblock footer %}
     </footer>
+
+    {% block scripts %}
+    {% endblock %}
+
 </body>
 </html>
