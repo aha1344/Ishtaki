@@ -7,8 +7,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs''django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs'
 
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["ishtaki.azurewebsites.net", '127.0.0.1']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 # Static files settings
 STATIC_URL = '/static/'
