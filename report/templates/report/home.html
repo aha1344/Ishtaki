@@ -1,64 +1,255 @@
 {% extends "report/base.html" %}
 <html dir="rtl" lang="ar">
- 
-
-{% block content %}
-<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="About Us"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Visualizations"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Report"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="https://ssir.org/images/jcogs_img/cache/Philanthropy_to_Protect_U.S._Democracy-592x358_-_28de80_-_d6d88a9f82e92db3aa511fbe1ff142a6e8725e5a.jpg" width="200" height="500" class="d-block w-100" alt="About Us">
+<head>
+  <style>
+    img.d-block {
+      width: 400px; /* Set the width as per your requirement */
+      height: auto; /* Maintain aspect ratio */
+      margin: 0 auto; /* Center the images horizontally */
+    }
+    #corruptionTypesContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      width: 100%;
+    }
+    #corruptionTypesGraph {
+      flex: 2;
+      opacity: 0; /* Start with opacity 0 for fade-in effect */
+      transition: opacity 2s ease-in;
+      width: 80%; /* Adjust the width as needed */
+      margin: 0 auto;
+    }
+    #corruptionTypesSummary {
+      flex: 1;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+    #corruptionTypesChart {
+      width: 100%;
+      height: 500px; /* Adjust the height as needed */
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background-color: black; /* Set the background color of the arrows */
+      background-size: 100%, 100%; /* Ensure the icon fits the container */
+      mask-image: none; /* Ensure the mask is not applied */
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse; /* Ensure borders collapse into a single border */
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  {% block content %}
+  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="About Us"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Visualizations"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Report"></button>
     </div>
-    <div class="carousel-item">
-      <img src="https://miro.medium.com/v2/resize:fit:1400/1*g__jiesLRIfCRefVG69Pfw.gif" width="200" height="500" class="d-block w-100" alt="Visualizations">
-    </div>
-    <div class="carousel-item">
-      <img src="https://img.freepik.com/premium-vector/illustration-vector-graphic-cartoon-character-company-activity-report_516790-1823.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1712880000&semt=ais" width="200" height="500" class="d-block w-100" alt="Report">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-<div class="fancy" style="text-align: right; margin-right: 49%; margin-top: 5%; margin-bottom: 7%; font-size: 140%;">
-  <span>نوع القطاع</span>
-</div>
-
-<div class="d-flex flex-row flex-wrap justify-content-start" style="margin-top: 3%;">
-  {% for sector in sectors %}
-  <div class="card mb-3 mx-2" style="width: calc(35.5% - 3rem); /* Adjust margin between cards */
-                                      background: rgba(255, 255, 255, 0.7);
-                                      border-radius: 8px;
-                                      box-shadow: 0 0 10px rgb(53, 94, 59);
-                                      position: relative;
-                                      z-index: 1;">
-    <a href="{% url 'statistics' sector_type=sector.0 %}" style="text-decoration: none; color: inherit;">
-
-    <div class="row g-0">
-        <div class="col-md-4">
-          <img src="/static/report/images/cedar2.png" class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{{ sector.1 }}</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          </div>
-        </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="/static/report/images/IMAGE3.jpg" class="d-block w-75" style="margin: 0 auto; height:500px;" alt="About Us">
+      </div>
+      <div class="carousel-item">
+        <img src="/static/report/images/geo.jpeg"class="d-block w-75" style="margin: 0 auto; height:500px;" alt="Visualizations">
+      </div>
+      <div class="carousel-item">
+        <img src="/static/report/images/إحصاءات  للـمؤسسات  حسب الفساد سياسي - فساد قانوني - احتكار.png" class="d-block w-75" style="margin: 0 auto; height: 500px" alt="Report">
       </div>
     </div>
-  {% endfor %}
-</div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27%23000%27 viewBox=%270 0 16 16%27%3e%3cpath d=%27M11.354 1.646a.5.5 0 0 0-.708 0l-6 6a.5.5 0 0 0 0 .708l6 6a.5.5 0 0 0 .708-.708L5.707 8l5.647-5.646a.5.5 0 0 0 0-.708z%27/%3e%3c/svg%3e');"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27%23000%27 viewBox=%270 0 16 16%27%3e%3cpath d=%27M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e');"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div>
+  </div>
 
+  <div class="about">
+    <h2>من نحن</h2>
+    <p>
+      نحن فريق مكرس لتوفير قناة آمنة وسرية للإبلاغ عن أحداث الفساد بمختلف أنواعها وفي مختلف القطاعات. نسعى إلى تعزيز الشفافية والمساءلة من خلال تمكين المواطنين من الإبلاغ عن الفساد دون خوف.
+    </p>
+    <p>
+      هدفنا هو تقديم بيئة موثوقة تتيح للأفراد مشاركة معلوماتهم بحرية وسرية تامة.
+    </p>
+    <p>
+      بالإضافة إلى استقبال التقارير، نقوم بتحليل البيانات وعرضها من خلال تصورات بيانية وخرائط حرارية. تساعد هذه الأدوات في تسليط الضوء على أنواع الفساد والقطاعات الأكثر تأثرًا، مما يسهل على الجهات المعنية اتخاذ الإجراءات المناسبة.
+    </p>
+    <p>
+      نلتزم بأعلى معايير الأمان لحماية معلومات المبلغين ونضمن عدم الكشف عن هويتهم. نعتبر كل تقرير يتم تقديمه لنا خطوة نحو بناء لبنان أكثر نزاهة وشفافية.
+    </p>
+  </div>
+  <div id="corruptionTypesContainer">
+    <div id="corruptionTypesSummary">
+      <h5 style="margin-right: 6%; position: relative; margin-top: 10%;">تلخيص أنواع الفساد الرائجة</h5>
+      <table style="margin-right: 6%; margin-top: 0%;">
+        <thead>
+          <tr>
+            <th>نوع الفساد</th>
+            <th>عدد التقارير</th>
+          </tr>
+        </thead>
+        <tbody id="corruptionSummaryTableBody">
+        </tbody>
+      </table>
+    </div> 
+    <div id="corruptionTypesGraph">
+      <div id="corruptionTypesChart" style="width: 80%; height: 500px; margin-top: -20%; margin-right: 17%;"></div>
+    </div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <script>
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    }
 
-{% endblock content %}
+    function fetchCorruptionTypes() {
+      fetch('/ajax/top_trending_corruption_types/')
+        .then(response => response.json())
+        .then(data => {
+          console.log('Fetched data:', data);
+
+          const summaryTableBody = document.getElementById('corruptionSummaryTableBody');
+          summaryTableBody.innerHTML = '';
+          const corruptionTypes = data.corruption_types.map(type => ({ name: type.name, count: type.count }));
+
+          corruptionTypes.forEach(type => {
+            const row = document.createElement('tr');
+            const nameCell = document.createElement('td');
+            const countCell = document.createElement('td');
+            nameCell.textContent = type.name;
+            countCell.textContent = type.count;
+            row.appendChild(nameCell);
+            row.appendChild(countCell);
+            summaryTableBody.appendChild(row);
+          });
+
+          const chart = echarts.init(document.getElementById('corruptionTypesChart'));
+
+          const option = {
+            title: {
+              text: 'أعلى 5 أنواع فساد رائجة',
+              left: 'center',
+              textStyle: {
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#333',
+              }
+            },  
+            xAxis: {
+              type: 'value'
+            },
+            yAxis: {
+              type: 'category',
+              data: corruptionTypes.map(type => type.name),
+              inverse: true,
+              animationDuration: 300,
+              animationDurationUpdate: 300,
+              max: 5 // only the largest 5 bars will be displayed
+            },
+            series: [
+              {
+                realtimeSort: true,
+                name: 'الفساد',
+                type: 'bar',
+                data: corruptionTypes.map(type => type.count),
+                label: {
+                  show: true,
+                  position: 'right',
+                  valueAnimation: true
+                },
+                itemStyle: {
+                  color: (params) => {
+                    const colors = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE'];
+                    return colors[params.dataIndex % colors.length];
+                  }
+                }
+              }
+            ],
+            legend: {
+              show: false
+            },
+            animationDuration: 0,
+            animationDurationUpdate: 3000,
+            animationEasing: 'linear',
+            animationEasingUpdate: 'linear'
+          };
+
+          chart.setOption(option);
+
+          // Gradually increment to the actual count
+          function run() {
+            let updated = false;
+            corruptionTypes.forEach(type => {
+              if (type.currentCount < type.count) {
+                type.currentCount += Math.ceil((type.count - type.currentCount) / 10);
+                updated = true;
+              }
+            });
+            if (updated) {
+              chart.setOption({
+                series: [
+                  {
+                    type: 'bar',
+                    data: corruptionTypes.map(type => type.currentCount)
+                  }
+                ]
+              });
+              setTimeout(run, 100); // Continue updating every 100ms until all counts are reached
+            }
+          }
+
+          // Initialize the current counts and start the update process
+          corruptionTypes.forEach(type => type.currentCount = 0);
+          run();
+        })
+        .catch(error => console.error('Error fetching corruption types:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const corruptionGraph = document.getElementById('corruptionTypesGraph');
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            corruptionGraph.style.opacity = 1;
+            fetchCorruptionTypes();
+            observer.unobserve(corruptionGraph);
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      observer.observe(corruptionGraph);
+    });
+  </script>
+  {% endblock content %}
+</body>
 </html>

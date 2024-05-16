@@ -1,455 +1,595 @@
+<!DOCTYPE html>
 {% extends "report/base.html" %}
-<html dir="rtl" lang="en">
-
-{% block title %}Report Dashboard{% endblock %}
-
-{% block extra_head %}
-<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-{% endblock extra_head %}
-
 {% block content %}
-<label for="sectorTypeSelect">Choose a sector:</label>
-<select id="sectorTypeSelect">
-    <option value="">Select Sector</option>
-    {% for value, name in sector_types %}
-    <option value="{{ value }}" {% if value == sector_type %}selected{% endif %}>{{ name }}</option>
-    {% endfor %}
-</select>
+<html lang="ar" dir="rtl">
 
-<br><br><br>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<style>
+    #controlsContainer {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
 
-<label for="corruptionTypeSelect">نوع الفساد:</label>
-<br>
-<select id="corruptionTypeSelect" multiple>
-    <option value="all" selected>كل الانواع</option>
-    {% for value, name in corruption_types %}
-    <option value="{{ value }}">{{ name }}</option>
-    {% endfor %}
-</select>
+    #sectorTypeContainer, #corruptionTypeContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
 
-<br>
+    #sectorTypeContainer label{
+        position: relative;
+        margin-left: 50px;
+    }
+    #corruptionTypeContainer label{
+        position: relative;
+        margin-left: 190px;
+    }
+    #main {
+        width: 85%;
+        height: 400px;
+        margin: 0 auto 100px;
+    }
 
-<div id="main" style="width: 1000px; height: 400px;"></div>
-<div id="main2" style="width: 1400px; height: 600px;"></div>
-<div id="main3" style="width: 1200px; height: 400px; margin-top:50px"></div>
+    #main2, #main3 {
+        width: 85%;
+        height: 400px;
+        margin: 0 auto 100px;
+    }
+    .form-select {
+        width: auto;
+        display: inline-block;
+    }
 
-<script>
-        // change sector type page when its changed
-        document.getElementById('sectorTypeSelect').addEventListener('change', function() {
-            var sectorType = this.value;
-            if (sectorType) {
-                window.location.href = `/statistics/${sectorType}/`;
-            }
-        });
-        
-        var sectorType = '{{ sector_type }}';
-        var defaultCorruptionType = 'all'; // Default corruption type that is initially selected: which is كل الانواع
-    
-        // 3 DIVs for every chart
-        var myChart1 = echarts.init(document.getElementById('main'));
-        var myChart2 = echarts.init(document.getElementById('main2'));
-        var myChart3 = echarts.init(document.getElementById('main3'));
-        
-        // Settings for Chart 2
-        function createCountCorruptionTypeStatisticsChart(chartType, data){
 
-            var options = {
-                title: { text: 'Count Statistics for ' + sectorType +  ' per Corruption Type' },
-                tooltip: {}, 
-                toolbox: {
-                    show: true,
-                    orient: 'horizontal', // Horizontal or vertical
-                    left: 'right', // Position from left
-                    top: 'top', // Position from top
-                    feature: {
-                        mark: { show: true },
-                        dataView: {
-                            show: true,
-                            readOnly: true,
-                        },                    
-                        magicType: { show: true, type: ['line', 'bar', 'stack'] },
-                        saveAsImage: { show: true }
+    .dropdown-menu {
+        max-height: 200px;
+        overflow-y: auto;
+        right: 0;
+        left: auto;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: auto;
+    }
+</style>
+
+<body>
+    <div id="controlsContainer">
+        <div id="sectorTypeContainer">
+            <label for="sectorTypeSelect">اختر القطاع:</label>
+            <select id="sectorTypeSelect" class="form-select" aria-label="اختر القطاع">
+                <option value="">اختر القطاع</option>
+                {% for value, name in sector_types %}
+                <option value="{{ value }}" {% if value == sector_type %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="corruptionTypeContainer">
+            <label for="corruptionTypeSelect">نوع الفساد:</label>
+            <select id="corruptionTypeSelect" multiple class="form-select" aria-label="نوع الفساد">
+                <option value="all" selected>كل الانواع</option>
+                {% for value, name in corruption_types %}
+                <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div id="main"></div>
+    <div id="main2"></div>
+    <div id="main3"></div>
+
+    <script>
+        // Dictionary of sector types
+        const sectorTypesDict = {
+            'hospitals': 'مستشفيات',
+            'ministries': 'وزارات',
+            'institutions': 'مؤسسات',
+            'banks': 'بنوك',
+            'prisons': 'سجون',
+            'courts': 'محاكم',
+            'universities': 'جامعات',
+            'security_institutions': 'مؤسسات امنية'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Change sector type page when it's changed
+            document.getElementById('sectorTypeSelect').addEventListener('change', function() {
+                var sectorType = this.value;
+                if (sectorType) {
+                    window.location.href = `/statistics/${sectorType}/`;
+                }
+            });
+
+            var sectorType = '{{ sector_type }}';
+            var sectorTypeName = sectorTypesDict[sectorType];
+            var defaultCorruptionType = 'all'; // Default corruption type that is initially selected: which is كل الانواع
+
+            // 3 DIVs for every chart
+            var myChart1 = echarts.init(document.getElementById('main'));
+            var myChart2 = echarts.init(document.getElementById('main2'));
+            var myChart3 = echarts.init(document.getElementById('main3'));
+
+            console.log('ECharts instances created:', myChart1, myChart2, myChart3);
+
+            // Settings for Chart 2
+            function createCountCorruptionTypeStatisticsChart(chartType, data) {
+                var options = {
+                    title: {
+                        text: 'إحصاءات لل' + sectorTypeName + ' حسب نوع الفساد',
+                        left: 'center', // Center the title
+                        top: '20px' // Adjust top margin as needed
                     },
-                    iconStyle: {
-                        borderColor: '#1e90ff' // Custom border color
-                    },
-                    emphasis: {
+                    tooltip: {},
+                    toolbox: {
+                        show: true,
+                        orient: 'horizontal', // Horizontal or vertical
+                        left: 'right', // Position from left
+                        top: 'top', // Position from top
+                        feature: {
+                            mark: { show: true },
+                            dataView: {
+                                show: true,
+                                readOnly: true,
+                            },
+                            magicType: { show: true, type: ['line', 'bar', 'stack'] },
+                            saveAsImage: { show: true }
+                        },
                         iconStyle: {
-                            borderColor: '#bada55' // Custom border color on hover
+                            borderColor: '#1e90ff' // Custom border color
+                        },
+                        emphasis: {
+                            iconStyle: {
+                                borderColor: '#bada55' // Custom border color on hover
+                            }
+                        },
+                    },
+                    legend: {
+                        data: ['Total'],
+                        orient: 'vertical', // Changed to horizontal
+                        top: 'bottom', // Position legend at the bottom
+                        left: 'center' // Center the legend
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.map(item => item.corruption_type),
+                        axisLabel: { interval: 0, rotate: 45 }
+                    },
+                    yAxis: { type: 'value' },
+                    series: [{ type: chartType, data: data.map(item => item.total), itemStyle: { color: 'green' } }]
+                };
+            
+                myChart2.setOption(options);
+                // Add CSS to center the chart container and increase its width
+            const chartContainer2 = document.getElementById('main2');
+            chartContainer2.style.width = '80%'; // Increase width as needed
+            chartContainer2.style.margin = '0 auto'; // Center the container horizontally
+            chartContainer2.style.display = 'flex'; // Use flexbox for centering
+            chartContainer2.style.justifyContent = 'center'; // Center contents
+            }
+            
+            
+            // Fetch data for chart 2 and display it
+            fetch(`/ajax/load_statistics/${sectorType}/`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data for chart 2:', data);
+                    if (!data.sector_count_per_corruption_type || data.sector_count_per_corruption_type.length === 0) {
+                        displayNoDataMessage(myChart2);
+                        return;
+                    }
+                    createCountCorruptionTypeStatisticsChart('bar', data.sector_count_per_corruption_type);
+                })
+                .catch(error => console.error('Error loading the data for chart 2:', error));
+
+            // Settings for first chart when no type of corruption is selected
+            function createTemporalStatisticsChart(data) {
+                if (!Array.isArray(data)) {
+                    console.error('Expected an array but got:', data);
+                    displayNoDataMessage(myChart1);
+                    return;
+                }
+
+                var options = {
+                    title: { 
+                        text: 'إحصاءات زمنية للـ' + sectorTypeName.charAt(0).toUpperCase() + sectorTypeName.slice(1),
+                        top: '20px',
+                        left: 'center',
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
                         }
                     },
-                },
-                legend: { data: ['Total'] },
-                xAxis: {
-                    type: 'category', 
-                    data: data.map(item => item.corruption_type), 
-                    axisLabel: { interval: 0, rotate: 45 }
-                },
-                yAxis: { type: 'value' },
-                series: [{ type: chartType, data: data.map(item => item.total), itemStyle: { color: 'green' } }]
-            };
+                    toolbox: {
+                        show: true,
+                        orient: 'horizontal', // Horizontal or vertical
+                        left: 'right', // Position from left
+                        top: 'top',
+                        feature: {
+                            dataView: {
+                                show: true,
+                                readOnly: true,
+                                optionToContent: function(opt) {
+                                    var xAxisData = opt.xAxis[0].data; // Fetching years from x-axis data
+                                    var series = opt.series;
+                                    var table = '<table style="width:100%;text-align:center;border-collapse:collapse;"><thead><tr>';
 
-            myChart2.setOption(options);
-        }
-        // fetch data for chart 2 and display it
-        fetch(`/ajax/load_statistics/${sectorType}/`)
-        .then(response => response.json())
-        .then(data => {
-            if (!data.sector_count_per_corruption_type || data.sector_count_per_corruption_type.length === 0) {
-                displayNoDataMessage(myChart2);
-                return;
-            }
-            // add event listener to get the chart type chosen by the user (through the radio buttons)
-            createCountCorruptionTypeStatisticsChart('bar', data.sector_count_per_corruption_type);
-        })
-        .catch(error => console.error('Error loading the data:', error))
+                                    // Header row with column names
+                                    table += '<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">Year</th>';
+                                    series.forEach(function(item) {
+                                        table += `<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">${item.name}</th>`;
+                                    });
+                                    table += '</tr></thead><tbody>';
 
-        // Settings for first chart when no type of corruption is selected
-        function createTemporalStatisticsChart(data) {
-            if (!Array.isArray(data)) {
-                console.error('Expected an array but got:', data);
-                displayNoDataMessage(myChart1);
-                return;
-            }
-        
-            var options = {
-                title: { text: 'Temporal Statistics for ' + sectorType.charAt(0).toUpperCase() + sectorType.slice(1) },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow'
-                    }
-                },
-                toolbox: {
-                    show: true,
-                    orient: 'horizontal', // Horizontal or vertical
-                    left: 'right', // Position from left
-                    top: 'top', // Position from top
-                    feature: {
-                        // table settings
-                        dataView: {
-                            show: true,
-                            readOnly: true,
-                            optionToContent: function(opt) {
-                                var xAxisData = opt.xAxis[0].data; // Fetching years from x-axis data
-                                var series = opt.series;
-                                var table = '<table style="width:100%;text-align:center;border-collapse:collapse;"><thead><tr>';
-                            
-                                // Header row with column names
-                                table += '<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">Year</th>';
-                                series.forEach(function(item) {
-                                    table += `<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">${item.name}</th>`;
-                                });
-                                table += '</tr></thead><tbody>';
-                            
-                                // Creating rows for each year based on xAxis data
-                                xAxisData.forEach(function(year, index) {
-                                    table += '<tr>';
+                                    // Creating rows for each year based on xAxis data
+                                    xAxisData.forEach(function(year, index) {
+                                        table += '<tr>';
                                         table += `<td style="padding: 8px; border: 1px solid #ddd;">${year}</td>`;  // Display the year
                                         series.forEach(function(item) {
-                                        var value = item.data[index]; // Assume that each series has data aligned with xAxis
-                                        table += `<td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;  // Display the data value for this year
+                                            var value = item.data[index]; // Assume that each series has data aligned with xAxis
+                                            table += `<td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;  // Display the data value for this year
+                                        });
+                                        table += '</tr>';
                                     });
-                                    table += '</tr>';
-                                });
-                            
-                                table += '</tbody></table>';
-                                return table;
-                            },
-                            
-                        },
-                        magicType: {
-                            show: true,
-                            type: ['line', 'bar', 'stack'],
-                            title: {
-                                line: 'Line Chart',
-                                bar: 'Bar Chart',
-                                stack: 'Stacked Chart',
-                            },
-                        },
-                        saveAsImage: {
-                            show: true,
-                            title: 'Save as Image',
-                            pixelRatio: 2 // Higher resolution for saved image
-                        }
-                    },
-                    iconStyle: {
-                        borderColor: '#1e90ff' // Custom border color
-                    },
-                    emphasis: {
-                        iconStyle: {
-                            borderColor: '#bada55' // Custom border color on hover
-                        }
-                    }
-                },
-                dataZoom: [{
-                    type: 'slider',
-                    start: 0,
-                    end: 100 // Assuming you want to show all data initially
-                }],
-                legend: { data: ['كل انواع الفساد'] },
-                xAxis: {
-                    type: 'category',
-                    data: data.map(item => item.year),
-                    axisTick: {
-                        alignWithLabel: true
-                    }
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    name: 'كل انواع الفساد',
-                    type: 'bar', // default type
-                    data: data.map(item => item.total),
-                }]
-            };
-        
-            myChart1.setOption(options);
-        }
-        
-        
-    // fetch data for first chart and display it    
-    fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=${defaultCorruptionType}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Data received:", data);
-        if (!data.temporal_sector_type_count || data.temporal_sector_type_count.length === 0) {
-            displayNoDataMessage(myChart1);
-            return;
-        }
-        createTemporalStatisticsChart(data.temporal_sector_type_count);
-    })
-    .catch(error => {
-        console.error('Error loading the data:', error);
-        displayNoDataMessage(myChart1);
-    });
-    
-    // settings for chart1 when corruption types are chosen
-    function createTemporalStatisticsChartWithCorruptionType(data) {
-        let selectedOptions = document.getElementById('corruptionTypeSelect').selectedOptions;
-        let corruptionTypesChosen = Array.from(selectedOptions).map(option => option.value);
-    
-        const years = [...new Set(data.map(item => item.year))];
-        // Use only the corruption types that are chosen in the select options
-        const corruptionTypes = corruptionTypesChosen.length > 0 ? corruptionTypesChosen : [...new Set(data.map(item => item.corruption_type))];
-        const corruptionTypesString = corruptionTypes.join(' - ');
 
-    
-        // Prepare the series array, one for each chosen corruption type
-        const series = corruptionTypes.map(type => ({
-            name: type,
-            type: 'bar',
-            stack: 'total',  // This stack key helps ECharts know these bars should be stacked
-            emphasis: {
-                focus: 'series'
-            },
-            data: years.map(year => {
-                const item = data.find(it => it.year === year && it.corruption_type === type);
-                return item ? item.total : 0;
-            }),
-            
-            
-        }));
-    
-        // ECharts option structure
-        const option = {
-            {% comment %} title: { text: 'Detailed Statistics for ' + sectorType +  ' per ' + corruptionTypesString }, {% endcomment %}
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            legend: {
-                data: corruptionTypes
-            },
-            toolbox: {
-                show: true,
-                orient: 'horizontal', // Horizontal or vertical
-                left: 'right', // Position from left
-                top: 'top', // Position from top
-                feature: {
-                    mark: { show: true },
-                    dataView: {
-                        show: true,
-                        readOnly: true,
-                        optionToContent: function(opt) {
-                            var series = opt.series;
-                            var xAxisData = opt.xAxis[0].data;
-                            var table = '<table style="width:100%;text-align:center;border-collapse:collapse;"><thead><tr>';
-                    
-                            // Header row with column names
-                            table += '<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">Year</th>';
-                            series.forEach(function(item) {
-                                table += `<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">${item.name}</th>`;
-                            });
-                            table += '</tr></thead><tbody>';
-                    
-                            // Iterate over each year and populate data from each series
-                            xAxisData.forEach(function(year, index) {
-                                table += '<tr>';
-                                table += `<td style="padding: 8px; border: 1px solid #ddd;">${year}</td>`;  // Display the year
-                                series.forEach(function(item) {
-                                    var value = item.data[index] !== undefined ? item.data[index] : 'N/A';  // Checking for undefined values
-                                    table += `<td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;  // Display the data value for this year
-                                });
-                                table += '</tr>';
-                            });
-                    
-                            table += '</tbody></table>';
-                            return table;
+                                    table += '</tbody></table>';
+                                    return table;
+                                }
+                            },
+                            magicType: {
+                                show: true,
+                                type: ['line', 'bar', 'stack'],
+                                title: {
+                                    line: 'Line Chart',
+                                    bar: 'Bar Chart',
+                                    stack: 'Stacked Chart',
+                                },
+                            },
+                            saveAsImage: {
+                                show: true,
+                                title: 'Save as Image',
+                                pixelRatio: 2 // Higher resolution for saved image
+                            }
+                        },
+                        iconStyle: {
+                            borderColor: '#1e90ff' // Custom border color
+                        },
+                        emphasis: {
+                            iconStyle: {
+                                borderColor: '#bada55' // Custom border color on hover
+                            }
                         }
-                    },                    
-                    magicType: { show: true, type: ['line', 'bar', 'stack'] },
-                    saveAsImage: { show: true }
-                },
-                iconStyle: {
-                    borderColor: '#1e90ff' // Custom border color
-                },
-                emphasis: {
-                    iconStyle: {
-                        borderColor: '#bada55' // Custom border color on hover
+                    },
+                    dataZoom: [{
+                        type: 'slider',
+                        start: 0,
+                        end: 100 // Assuming you want to show all data initially
+                    }],
+                    legend: {
+                        data: ['كل انواع الفساد'],
+                        orient: 'vertical',
+                        left: 'right',
+                        top: 'center',
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.map(item => item.year),
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        name: 'كل انواع الفساد',
+                        type: 'bar', // default type
+                        data: data.map(item => item.total),
+                    }]
+                };
+
+                myChart1.setOption(options);
+                const chartContainer = document.getElementById('main');
+                chartContainer.style.width = '80%'; // Increase width as needed
+                chartContainer.style.margin = '0 auto'; // Center the container horizontally
+                chartContainer.style.display = 'flex'; // Use flexbox for centering
+                chartContainer.style.justifyContent = 'center'; // Center contents
+            }
+
+            // Fetch data for first chart and display it    
+            fetch(`/ajax/load_statistics/${sectorType}/?corruption_type=${defaultCorruptionType}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                },
-            },
-            dataZoom: [{
-                type: 'slider', // This is the type that allows for a sliding bar graph feature
-                start: 0, // Starting position of the zoom in percentage (0%)
-                end: 50 // Ending position of the zoom in percentage (50%)
-            }],
-            xAxis: {
-                type: 'category',
-                axisTick: { show: false },
-                data: years
-            },
-            yAxis: {
-                type: 'value',
-            },
-            series: series
-        };
-    
-        // Set the option to your chart instance
-        myChart1.setOption(option);
-    }
-    
-    
-    // apply the settings for the selected corruption type on chart1 when a corruption type is selected
-    document.getElementById('corruptionTypeSelect').addEventListener('change', function() {
-        myChart1.clear();
-        let selectedOptions = document.getElementById('corruptionTypeSelect').selectedOptions;
-        let corruptionTypes = Array.from(selectedOptions).map(option => option.value);
-        let isAllSelected = corruptionTypes.includes('all');
-        let queryString = isAllSelected ? '' : corruptionTypes.map(type => `corruption_type[]=${type}`).join('&');
-    
-    
-    fetch(`/ajax/load_statistics/${sectorType}/?${queryString}`)
-        .then(response => response.json())
-        .then(data => {
-            if (!data.temporal_sector_type_ct_count || data.temporal_sector_type_ct_count.length === 0) {
-                displayNoDataMessage(myChart1);
-                return;  // Return early to avoid further execution when no data is available
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Data for chart 1:", data);
+                    if (!data.temporal_sector_type_count || data.temporal_sector_type_count.length === 0) {
+                        displayNoDataMessage(myChart1);
+                        return;
+                    }
+                    createTemporalStatisticsChart(data.temporal_sector_type_count);
+                })
+                .catch(error => {
+                    console.error('Error loading the data for chart 1:', error);
+                    displayNoDataMessage(myChart1);
+                });
+
+            // Settings for chart1 when corruption types are chosen
+            function createTemporalStatisticsChartWithCorruptionType(data) {
+                let selectedOptions = document.getElementById('corruptionTypeSelect').selectedOptions;
+                let corruptionTypesChosen = Array.from(selectedOptions).map(option => option.value);
+
+                const years = [...new Set(data.map(item => item.year))];
+                // Use only the corruption types that are chosen in the select options
+                const corruptionTypes = corruptionTypesChosen.length > 0 ? corruptionTypesChosen : [...new Set(data.map(item => item.corruption_type))];
+                const corruptionTypesString = corruptionTypes.join(' - ');
+
+                // Prepare the series array, one for each chosen corruption type
+                const series = corruptionTypes.map(type => ({
+                    name: type,
+                    type: 'bar',
+                    stack: 'total',  // This stack key helps ECharts know these bars should be stacked
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: years.map(year => {
+                        const item = data.find(it => it.year === year && it.corruption_type === type);
+                        return item ? item.total : 0;
+                    }),
+                }));
+
+                // ECharts option structure
+                const option = {
+                    title: {
+                        text: 'إحصاءات  للـ' + sectorTypeName + '  حسب ال' + corruptionTypesString,
+                        top: '20px',
+                        left: 'center',
+                    },                    
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: ['كل انواع الفساد'],
+                        orient: 'horizontal',
+                        left: 'center',
+                        top: 'top',
+                    },
+                    toolbox: {
+                        show: true,
+                        orient: 'horizontal', // Horizontal or vertical
+                        left: 'right', // Position from left
+                        top: 'top',
+                        feature: {
+                            mark: { show: true },
+                            dataView: {
+                                show: true,
+                                readOnly: true,
+                                optionToContent: function(opt) {
+                                    var series = opt.series;
+                                    var xAxisData = opt.xAxis[0].data;
+                                    var table = '<table style="width:100%;text-align:center;border-collapse:collapse;"><thead><tr>';
+
+                                    // Header row with column names
+                                    table += '<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">Year</th>';
+                                    series.forEach(function(item) {
+                                        table += `<th style="padding: 8px; border: 1px solid #ddd;background-color: #f2f2f2;">${item.name}</th>`;
+                                    });
+                                    table += '</tr></thead><tbody>';
+
+                                    // Iterate over each year and populate data from each series
+                                    xAxisData.forEach(function(year, index) {
+                                        table += '<tr>';
+                                        table += `<td style="padding: 8px; border: 1px solid #ddd;">${year}</td>`;  // Display the year
+                                        series.forEach(function(item) {
+                                            var value = item.data[index] !== undefined ? item.data[index] : 'N/A';  // Checking for undefined values
+                                            table += `<td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;  // Display the data value for this year
+                                        });
+                                        table += '</tr>';
+                                    });
+
+                                    table += '</tbody></table>';
+                                    return table;
+                                }
+                            },
+                            magicType: { show: true, type: ['line', 'bar', 'stack'] },
+                            saveAsImage: { show: true }
+                        },
+                        iconStyle: {
+                            borderColor: '#1e90ff' // Custom border color
+                        },
+                        emphasis: {
+                            iconStyle: {
+                                borderColor: '#bada55' // Custom border color on hover
+                            }
+                        },
+                    },
+                    dataZoom: [{
+                        type: 'slider', // This is the type that allows for a sliding bar graph feature
+                        start: 0, // Starting position of the zoom in percentage (0%)
+                        end: 50 // Ending position of the zoom in percentage (50%)
+                    }],
+                    xAxis: {
+                        type: 'category',
+                        axisTick: { show: false },
+                        data: years
+                    },
+                    yAxis: {
+                        type: 'value',
+                    },
+                    series: series
+                };
+
+                // Set the option to your chart instance
+                myChart1.setOption(option);
+                const chartContainer = document.getElementById('main');
+                chartContainer.style.width = '80%'; // Increase width as needed
+                chartContainer.style.margin = '0 auto'; // Center the container horizontally
+                chartContainer.style.display = 'flex'; // Use flexbox for centering
+                chartContainer.style.justifyContent = 'center'; // Center contents
             }
-            // Only update the chart if 'all' is not selected
-            if (!isAllSelected) {
-               createTemporalStatisticsChartWithCorruptionType(data.temporal_sector_type_ct_count)
-            }
-            else{
-                createTemporalStatisticsChart(data.temporal_sector_type_count)
-            }
-        })
-        .catch(error => console.error('Error loading the data:', error));
-        
-    })
-        // settings for 3rd Chart
-        function createSectorNameStatisticsChart(chartType, data){
-            var options = {
-                title: {
-                    text: 'Stats for ' + sectorType,
-                    left: '0%',  // Centers the title horizontally
-                    top: '0%'
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{b}: {c} ({d}%)'
-                },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    top: 'middle',
-                    fontSize: 16,
-                },
-                series: [{
-                    name: sectorType,
-                    type: chartType,
-                    center: ['50%', '50%'], 
-                    label: {
-                        normal: {
+
+            // Apply the settings for the selected corruption type on chart1 when a corruption type is selected
+            document.getElementById('corruptionTypeSelect').addEventListener('change', function() {
+                myChart1.clear();
+                let selectedOptions = document.getElementById('corruptionTypeSelect').selectedOptions;
+                let corruptionTypes = Array.from(selectedOptions).map(option => option.value);
+                let isAllSelected = corruptionTypes.includes('all');
+                let queryString = isAllSelected ? '' : corruptionTypes.map(type => `corruption_type[]=${type}`).join('&');
+
+                fetch(`/ajax/load_statistics/${sectorType}/?${queryString}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Data for chart 1 with corruption types:', data);
+                        if (!data.temporal_sector_type_ct_count || data.temporal_sector_type_ct_count.length === 0) {
+                            displayNoDataMessage(myChart1);
+                            return;  // Return early to avoid further execution when no data is available
+                        }
+                        // Only update the chart if 'all' is not selected
+                        if (!isAllSelected) {
+                            createTemporalStatisticsChartWithCorruptionType(data.temporal_sector_type_ct_count)
+                        } else {
+                            createTemporalStatisticsChart(data.temporal_sector_type_count)
+                        }
+                    })
+                    .catch(error => console.error('Error loading the data for chart 1 with corruption types:', error));
+            });
+
+            // Settings for 3rd Chart
+            function createSectorNameStatisticsChart(chartType, data) {
+                var options = {
+                    title: {
+                        text: 'إحصاءات ل' + sectorTypeName,
+                        left: 'center',
+                        top: '20px',
+                        textStyle: {
+                            fontSize: 20
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}: {c} ({d}%)'
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        left: 'left',
+                        top: 'middle',
+                        bottom: '10%',
+                        textStyle: {
+                            fontSize: 16
+                        }
+                    },
+                    series: [{
+                        name: sectorTypeName,
+                        type: chartType,
+                        center: ['50%', '60%'],
+                        label: {
                             show: true,
                             position: 'outside',
-                            fontSize: 16,
+                            fontSize: 12,
+                        },
+                        labelLine: {
+                            length: 10,
+                            length2: 10,
+                            smooth: true
+                        },
+                        data: data.map(item => ({
+                            name: extractSecondPart(item.name),
+                            value: item.value
+                        })),
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
                         }
-                    },
-                    radius: '50%',
-                    data: data.map(item => ({
-                        name: extractSecondPart(item.name),
-                        value: item.value
-                    })),                        emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }]
-            };
-            myChart3.setOption(options);
-        }
+                    }]
+                };
+                myChart3.setOption(options);
+                const chartContainer = document.getElementById('main3');
+                chartContainer.style.width = '80%'; // Increase width as needed
+                chartContainer.style.margin = '0 auto'; // Center the container horizontally
+                chartContainer.style.display = 'flex'; // Use flexbox for centering
+                chartContainer.style.justifyContent = 'center'; // Center contents
+            }
+            
+            
 
-        // fetch data for 3rd chart and render it
-        fetch(`/ajax/load_statistics/${sectorType}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (!data.sector_name_data || data.sector_name_data.length === 0) {
-                    displayNoDataMessage(myChart3);
-                }
-                else{
-                  // add event listener to get the chart type chosen by the user (through the radio buttons)
-                    createSectorNameStatisticsChart('pie', data.sector_name_data);
-                }
-            })
-            .catch(error => console.error('Error loading the data:', error));
-                
-        // chart setting for when there is no data
-        function displayNoDataMessage(chart) {
-            chart.clear();
-            chart.setOption({
-                graphic: {
-                    type: 'text',
-                    left: 'center', 
-                    top: 'center', 
-                    style: {
-                        text: 'No information about this',
-                        fill: '#333',
-                        fontSize: 20
+            // Fetch data for 3rd chart and render it
+            fetch(`/ajax/load_statistics/${sectorType}/`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data for chart 3:', data);
+                    if (!data.sector_name_data || data.sector_name_data.length === 0) {
+                        displayNoDataMessage(myChart3);
+                    } else {
+                        createSectorNameStatisticsChart('pie', data.sector_name_data);
                     }
-                }
-            })
-        }
-        function extractSecondPart(nameString) {
-            console.log("Original input:", nameString);  // Debug output
-            if (!nameString) return "";  // Handle null, undefined, or empty string
-            let trimmed = nameString.slice(1, nameString.length - 1); // Remove outer parentheses if present
-            let parts = trimmed.split(','); // Split by comma
-            console.log("Parts after split:", parts);  // Debug output
-            if (parts.length < 2) return trimmed;  // Return the trimmed string if it doesn't contain a comma
-            return parts[1].trim().slice(1, -1); // Remove quotes and whitespace around the second part
-        }
-        
-</script>
-{% endblock %}
+                })
+                .catch(error => console.error('Error loading the data for chart 3:', error));
+
+            // Chart setting for when there is no data
+            function displayNoDataMessage(chart) {
+                chart.clear();
+                chart.setOption({
+                    graphic: {
+                        type: 'text',
+                        left: 'center',
+                        top: 'center',
+                        style: {
+                            text: 'No information about this',
+                            fill: '#333',
+                            fontSize: 20
+                        }
+                    }
+                });
+            }
+
+            function extractSecondPart(nameString) {
+                console.log("Original input:", nameString);  // Debug output
+                if (!nameString) return "";  // Handle null, undefined, or empty string
+                let trimmed = nameString.slice(1, nameString.length - 1); // Remove outer parentheses if present
+                let parts = trimmed.split(','); // Split by comma
+                console.log("Parts after split:", parts);  // Debug output
+                if (parts.length < 2) return trimmed;  // Return the trimmed string if it doesn't contain a comma
+                return parts[1].trim().slice(1, -1); // Remove quotes and whitespace around the second part
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+{% endblock content %}
+

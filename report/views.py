@@ -16,6 +16,7 @@ from .models import Report
 from django.db.models import Count,F
 from django.db.models.functions import ExtractYear
 
+
 # function that accepts a get request to the server in order to retrieve the sector names associated with the sector type chosen in the form, return the sector names as JSON.
 def load_sector_names(request):
     sector_type = request.GET.get('sector_type')
@@ -102,6 +103,22 @@ def load_statistics(request, sector_type):
 def HomePage(request):
     sectors  = [sector[1] for sector in sector_types]
     return render(request, "report/home.html", {"sectors":sectors})
+
+# New view to fetch top 5 trending corruption types
+def top_trending_corruption_types(request):
+    top_corruption_types = Report.objects.values('corruption_type') \
+                                         .annotate(count=Count('id')) \
+                                         .order_by('-count')[:5]
+
+    response_data = {
+            'corruption_types': [
+                {
+                    'name': item['corruption_type'],  # Correct field name
+                    'count': item['count']
+                } for item in top_corruption_types
+            ]
+        }    
+    return JsonResponse(response_data)
 
 def user_documentation(request):
     return render(request, 'report/userdocumentation.html')

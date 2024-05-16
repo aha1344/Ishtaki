@@ -18,4 +18,5 @@ urlpatterns = [
 
 
     # we wont use the load sector path, its just for ajax purposes.
+    path('ajax/top_trending_corruption_types/', views.top_trending_corruption_types, name='top_trending_corruption_types'),
 ]
