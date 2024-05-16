@@ -3,16 +3,16 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
+SECRET_KEY = 'django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs''django-insecure-8cr-kuy3&(zdhhv0u1%zuc9z#m_l)3=9+a6fcudcs8z2woh(hs'
+
+
+DEBUG = True
 ALLOWED_HOSTS = ["ishtaki.azurewebsites.net", '127.0.0.1']
 
 # Static files settings
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'report/static'),
-]
 
 # Application definition
 INSTALLED_APPS = [
@@ -41,11 +41,29 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',  # Use 'django.db.backends.postgresql' for PostgreSQL
         'NAME': os.environ.get('DB_NAME', 'db-ishtaki'),
         'USER': os.environ.get('DB_USER', 'maf68'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'mhfaub2003'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'Mhfaub2003'),
         'HOST': os.environ.get('DB_HOST', 'ishtaki-server.database.windows.net'),  # Change to your server name
         'PORT': os.environ.get('DB_PORT', '1433'),  # Change to '5432' for PostgreSQL
     }
 }
+
+# DATABASES = {
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.sqlite3',
+#     #     'NAME': BASE_DIR / 'db.sqlite3',
+#     # }
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Db',  
+#         # change name to database name on your laptop
+#         'USER': 'moham',  
+#         # change user to ur database user name on your laptop
+#         'PASSWORD': '123',  
+#         # password of your user
+#         'HOST': 'localhost',
+#         'PORT': '5432',  
+#     }
+# }
 
 ROOT_URLCONF = 'Capstone.urls'
 
@@ -93,5 +111,5 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # reCAPTCHA settings
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK')
+RECAPTCHA_PUBLIC_KEY = '6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN'
+RECAPTCHA_PRIVATE_KEY = '6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK'
