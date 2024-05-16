@@ -89,7 +89,6 @@ def load_statistics(request, sector_type):
                                     .values(name=F('public_sector_name'))
                                     .annotate(value=Count('id'))
                                     .order_by('name'))
-
     context = {
         'temporal_sector_type_count': temporal_sector_type_count,
         'temporal_sector_type_ct_count': temporal_sector_type_ct_count,
@@ -104,6 +103,15 @@ def HomePage(request):
     sectors  = [sector[1] for sector in sector_types]
     return render(request, "report/home.html", {"sectors":sectors})
 
+def user_documentation(request):
+    return render(request, 'report/userdocumentation.html')
+
+
+def developer_documentation(request):
+    return render(request, 'report/developerdocumentation.html')
+
+from django.http import HttpResponse
+from django.db import connection
 
 @require_GET
 def corruption_heatmap_data_view(request):
