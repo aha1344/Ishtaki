@@ -1,4 +1,14 @@
 from django.shortcuts import render, redirect
+from .choices import hospitals, ministries, institutions, prisons, banks, courts, universities, sector_types
+from django.http import JsonResponse
+from .forms import ReportForm
+from .models import Report
+from django.db.models import Count
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from .choices import corruption_types, sector_types, cities_coordinates
+
+
 from .choices import hospitals, ministries, institutions, prisons, banks, courts, universities, sector_types, corruption_types, security_institutions
 from django.http import JsonResponse
 from .forms import ReportForm
@@ -110,3 +120,49 @@ def top_trending_corruption_types(request):
         }    
     return JsonResponse(response_data)
 
+def user_documentation(request):
+    return render(request, 'report/userdocumentation.html')
+
+
+def developer_documentation(request):
+    return render(request, 'report/developerdocumentation.html')
+
+from django.http import HttpResponse
+from django.db import connection
+
+@require_GET
+def corruption_heatmap_data_view(request):
+    corruption_type = request.GET.get('corruption_type')
+    public_sector_type = request.GET.get('public_sector_type')
+
+    reports = Report.objects.all()
+    if corruption_type:
+        reports = reports.filter(corruption_type=corruption_type)
+    if public_sector_type:
+        reports = reports.filter(public_sector_type=public_sector_type)
+
+    data = []
+    for report in reports:
+        city = report.city
+        if city in cities_coordinates:
+            latitude, longitude = cities_coordinates[city]
+            data.append({
+                'latitude': latitude,
+                'longitude': longitude,
+                'corruption_type': report.corruption_type,
+                'public_sector_type': report.public_sector_type,
+                'public_sector_name': report.public_sector_name,
+                'date_of_incident': report.date_of_incident.isoformat(),
+                'street': report.street,
+            })
+
+    return JsonResponse(data, safe=False)
+
+def corruption_heatmap_view(request):
+    return render(request, 'report/heatmap.html')
+
+def get_choices_view(request):
+    return JsonResponse({
+        'corruption_types': corruption_types,
+        'sector_types': sector_types,
+    })

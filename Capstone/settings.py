@@ -52,23 +52,44 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+DEBUG = True
+ALLOWED_HOSTS = ["ishtaki.azurewebsites.net", '127.0.0.1']
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'Db',  
-    #     # change name to database name on your laptop
-    #     'USER': 'moham',  
-    #     # change user to ur database user name on your laptop
-    #     'PASSWORD': '123',  
-    #     # password of your user
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',  
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Db',  
+        # change name to database name on your laptop
+        'USER': 'moham',  
+        # change user to ur database user name on your laptop
+        'PASSWORD': '123',  
+        # password of your user
+        'HOST': 'localhost',
+        'PORT': '5432',  
+    }
 }
+
+# DATABASES = {
+#     'default': {
+        
+#         'ENGINE': 'mssql',
+#         'NAME': 'db-ishtaki',
+#         'USER': 'maf68',
+#         'PASSWORD': 'Mhfaub2003',
+#         'HOST':  'ishtaki-server.database.windows.net',  # Change to your server name
+#         'PORT': '1433',  # Change to '5432' for PostgreSQL
+#          'OPTIONS': {
+#             'driver': 'ODBC Driver 18 for SQL Server',
+#             'extra_params': 'TrustServerCertificate=yes',
+#         },
+#     }
+# }
 
 
 
@@ -140,6 +161,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RECAPTCHA_PUBLIC_KEY = '6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN'
 RECAPTCHA_PRIVATE_KEY = '6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK'
-
-
-

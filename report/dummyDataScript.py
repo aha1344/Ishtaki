@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from report.models import Report
 from report import choices
 
-# this file is a script that can be used to populat the database with dummy data. To do so, go to terminal:
+# this file is a script that can be used to populate the database with dummy data. To do so, go to terminal:
 # python manage.py shell
 # copy this whole page and paste it there and press enter.
 
@@ -26,7 +26,7 @@ corruption_types = [choice[0] for choice in choices.corruption_types]
 sector_types = [choice[0] for choice in choices.sector_types]
 city_choices = [choice[0] for choice in choices.cities]
 
-for _ in range(10000):
+for _ in range(10):
     ct = random.choice(corruption_types)
     sector_type = random.choice(sector_types)
     sector_name = random.choice(sector_names_mapping[sector_type])
