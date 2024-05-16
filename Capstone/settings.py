@@ -93,5 +93,5 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # reCAPTCHA settings
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', 'default-public-key')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', 'default-private-key')
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN6Lf67qkpAAAAAH7rWvxRc8EW9T_YKDdwmUI_HCnN')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK6Lf67qkpAAAAAC-hYor-GdOGPmwjo3-i24q5FfGK')
