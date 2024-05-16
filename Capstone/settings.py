@@ -38,12 +38,17 @@ MIDDLEWARE = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Use 'django.db.backends.postgresql' for PostgreSQL
+        
+        'ENGINE': 'mssql',
         'NAME': 'db-ishtaki',
         'USER': 'maf68',
         'PASSWORD': 'Mhfaub2003',
         'HOST':  'ishtaki-server.database.windows.net',  # Change to your server name
         'PORT': '1433',  # Change to '5432' for PostgreSQL
+         'OPTIONS': {
+            'driver': 'ODBC Driver 18 for SQL Server',
+            'extra_params': 'TrustServerCertificate=yes',
+        },
     }
 }
 
