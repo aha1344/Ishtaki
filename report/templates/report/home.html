@@ -1,56 +1,8 @@
 {% extends "report/base.html" %}
 <html dir="rtl" lang="ar">
 <head>
-  <style>
-    img.d-block {
-      width: 400px; /* Set the width as per your requirement */
-      height: auto; /* Maintain aspect ratio */
-      margin: 0 auto; /* Center the images horizontally */
-    }
-    #corruptionTypesContainer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      position: relative;
-      width: 100%;
-    }
-    #corruptionTypesGraph {
-      flex: 2;
-      opacity: 0; /* Start with opacity 0 for fade-in effect */
-      transition: opacity 2s ease-in;
-      width: 80%; /* Adjust the width as needed */
-      margin: 0 auto;
-    }
-    #corruptionTypesSummary {
-      flex: 1;
-      background: white;
-      padding: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      z-index: 1;
-    }
-    #corruptionTypesChart {
-      width: 100%;
-      height: 500px; /* Adjust the height as needed */
-    }
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-      background-color: black; /* Set the background color of the arrows */
-      background-size: 100%, 100%; /* Ensure the icon fits the container */
-      mask-image: none; /* Ensure the mask is not applied */
-    }
-    table {
-      width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse; /* Ensure borders collapse into a single border */
-    }
-    table, th, td {
-      border: 1px solid black;
-    }
-    th, td {
-      padding: 8px;
-      text-align: center;
-    }
-  </style>
+  <link href="report/static/report/reportStyle.css" rel="stylesheet">
+  
 </head>
 <body>
   {% block content %}
@@ -84,7 +36,7 @@
   </div>
 
   <div class="about">
-    <h2>من نحن</h2>
+    <h2 style="margin-top: 0%; margin-bottom: 3%; color: #D2122E;">من نحن</h2>
     <p>
       نحن فريق مكرس لتوفير قناة آمنة وسرية للإبلاغ عن أحداث الفساد بمختلف أنواعها وفي مختلف القطاعات. نسعى إلى تعزيز الشفافية والمساءلة من خلال تمكين المواطنين من الإبلاغ عن الفساد دون خوف.
     </p>
@@ -100,8 +52,8 @@
   </div>
   <div id="corruptionTypesContainer">
     <div id="corruptionTypesSummary">
-      <h5 style="margin-right: 6%; position: relative; margin-top: 10%;">تلخيص أنواع الفساد الرائجة</h5>
-      <table style="margin-right: 6%; margin-top: 0%;">
+      <h5 style="margin-right: 10%; position: relative; margin-top: 10%;">تلخيص أنواع الفساد الرائجة</h5>
+      <table style="width: 50%; margin-right: 10%;">
         <thead>
           <tr>
             <th>نوع الفساد</th>
@@ -113,7 +65,7 @@
       </table>
     </div> 
     <div id="corruptionTypesGraph">
-      <div id="corruptionTypesChart" style="width: 80%; height: 500px; margin-top: -20%; margin-right: 17%;"></div>
+      <div id="corruptionTypesChart" style="width: 100%; height: 500px; margin-top: -20%;"></div>
     </div>
   </div>
 

@@ -1,9 +1,9 @@
 {% extends "report/base.html" %}
-{% comment %} {% load static %} {% endcomment %}
+{% load static %}
 
 {% block content %}
 <div class="card">
-  <form method="post">
+  <form method="post" id="form-">
     <ul class="list-group list-group-flush">
       {% csrf_token %}
       <li class="list-group-item">
@@ -44,7 +44,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   var sectorTypeSelect = document.getElementById('public_sector_type_id');
   var sectorNameSelect = document.getElementById('public_sector_name_id');
-   sectorTypeSelect.value = ''
+  sectorTypeSelect.value = ''
 
   sectorTypeSelect.addEventListener('change', function() {
     let sectorType = this.value;
@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => console.error('Error loading sector names:', error));
   });
+
 });
 </script>
 {% endblock %}
