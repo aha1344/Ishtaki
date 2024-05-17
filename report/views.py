@@ -17,6 +17,8 @@ from django.db.models import Count,F
 from django.db.models.functions import ExtractYear
 
 
+from .forms import ReportForm
+
 # function that accepts a get request to the server in order to retrieve the sector names associated with the sector type chosen in the form, return the sector names as JSON.
 def load_sector_names(request):
     sector_type = request.GET.get('sector_type')
@@ -50,6 +52,7 @@ def report_view(request):
     else:
         form = ReportForm() # get an empty form 
     return render(request, 'report/report.html', {'form': form})
+
 
 # renders the visualization page for every sector type
 def statistics(request, sector_type):

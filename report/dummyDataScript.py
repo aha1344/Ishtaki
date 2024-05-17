@@ -26,7 +26,7 @@ corruption_types = [choice[0] for choice in choices.corruption_types]
 sector_types = [choice[0] for choice in choices.sector_types]
 city_choices = [choice[0] for choice in choices.cities]
 
-for _ in range(10):
+for _ in range(10000):
     ct = random.choice(corruption_types)
     sector_type = random.choice(sector_types)
     sector_name = random.choice(sector_names_mapping[sector_type])

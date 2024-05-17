@@ -25,12 +25,19 @@
             <button type="submit">Filter</button>
         </form>
         <button id="toggle-legend-button">Toggle Legend</button>
+        <button id="home-button" onclick="redirectToHome()">Home</button>
     </div>
     <div id="map"></div>
     <div class="legend-container" id="legend-container">
     </div>
     <script src="{% static 'report/heatmap.js' %}"></script>
 </body>
+<script src="{% static 'report/heatmap.js' %}"></script>
+    <script>
+        function redirectToHome() {
+            window.location.href = '/home/';
+        }
+    </script>
 </html>
 
 
